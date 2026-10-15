@@ -1,0 +1,170 @@
+import ast
+import re
+
+from typing import List, Dict, Tuple
+from agent2.tool_api.abc.tool_call_extractor import ToolCallExtractor, ToolError, DuplicateArgumentError
+
+class MDToolCallExtractor(ToolCallExtractor):
+    """
+    Extracts Markdown tool calls from text responses.
+    """
+    def __init__(self, tool_start: str = "# Tool Use", tool_end: str = "# Tool End"):
+        self.tool_start = tool_start
+        self.tool_end = tool_end
+
+    def extract(self, response_str: str) -> Tuple[str, List[Dict], List[ToolError]]:
+        """
+        Extracts tool calls from the response string.
+
+        Parse the first run of tool blocks separated only by whitespace.
+        Text after the first block begins is omitted on success. If no blocks
+        are found or extraction fails, preserve the original response; failures
+        return no calls and report extraction errors.
+        
+        Args:
+            response_str (str): The raw response from the model.
+            
+        Returns:
+            Tuple[str, List[Dict], List[ToolError]]: 
+                - The stripped assistant text before the first tool block,
+                  or the original response when no blocks are found or parsing fails.
+                - A list of extracted tool call dictionaries.
+                - A list of errors encountered during extraction.
+        """
+        num_starts = response_str.count(self.tool_start)
+        num_ends = response_str.count(self.tool_end)
+        
+        if num_starts > 0 and self.tool_end in self.tool_start:
+            num_ends -= num_starts * self.tool_start.count(self.tool_end)
+            
+        if num_starts > num_ends:
+            return response_str, [], [ToolError.TOOL_END_MISSING]
+        if num_ends > num_starts:
+            return response_str, [], [ToolError.TOOL_START_MISSING]
+
+        tool_calls = []
+        errors = []
+        
+        start_tag_esc = re.escape(self.tool_start)
+        end_tag_esc = re.escape(self.tool_end)
+        
+        pattern = f"{start_tag_esc}(.*?){end_tag_esc}"
+        
+        matches = list(re.finditer(pattern, response_str, re.DOTALL))
+        
+        if not matches:
+            return response_str, [], []
+            
+        contiguous_matches = []
+        if matches:
+            contiguous_matches.append(matches[0])
+            for i in range(1, len(matches)):
+                prev_match = matches[i-1]
+                curr_match = matches[i]
+                intervening_text = response_str[prev_match.end():curr_match.start()]
+                if intervening_text.strip():
+                    break
+                contiguous_matches.append(curr_match)
+        
+        cleaned_response = response_str[:contiguous_matches[0].start()].strip()
+        
+        for match in contiguous_matches:
+            content = match.group(1)
+            if not content.strip():
+                errors.append(ToolError.TOOL_MALFORMATTED)
+                continue
+                
+            content = match.group(1).strip()
+            
+            try:
+                tool_call = self._parse_single_call(content)
+                tool_calls.append(tool_call)
+            except DuplicateArgumentError:
+                errors.append(ToolError.TOOL_DUPLICATE_ARGUMENT)
+            except (ValueError, KeyError, Exception):
+                errors.append(ToolError.TOOL_MALFORMATTED)
+                
+        if errors:
+            return response_str, [], errors
+            
+        return cleaned_response, tool_calls, []
+
+    def _parse_single_call(self, input_str: str) -> Dict:
+        """
+        Parses the content inside a tool call block.
+        """
+        def parse_value(s: str):
+            stripped = s.strip()
+            if stripped.lower() in ("true", "false"):
+                return stripped.lower() == "true"
+            try:
+                return int(stripped)
+            except ValueError:
+                try:
+                    return float(stripped)
+                except ValueError:
+                    try:
+                        val = ast.literal_eval(stripped)
+                        if isinstance(val, (list, dict)):
+                            return val
+                    except (ValueError, SyntaxError):
+                        pass
+                    return stripped
+
+        lines = [line for line in input_str.split('\n')]
+        
+        if not lines:
+            raise ValueError("Empty tool call content")
+
+        first_line_idx = 0
+        while first_line_idx < len(lines) and not lines[first_line_idx].strip():
+            first_line_idx += 1
+            
+        if first_line_idx >= len(lines):
+            raise ValueError("Empty tool call content")
+            
+        if not lines[first_line_idx].startswith('## Name: '):
+            raise KeyError("First line must be '## Name: [tool_name]'")
+            
+        name = lines[first_line_idx][len('## Name: '):].strip()
+        result = {"name": name, "arguments": {}}
+
+        current_param = None
+        current_value = []
+
+        for line in lines[first_line_idx + 1:]:
+            if line.startswith('### '):
+                if current_param is not None:
+                    value_str = '\n'.join(current_value).strip()
+                    parsed_value = parse_value(value_str)
+                    result['arguments'][current_param] = parsed_value
+                    current_value = []
+                
+                param_line = line[len('### '):]
+                if ':' not in param_line:
+                    if param_line.strip().endswith(':'):
+                        param_name = param_line.strip()[:-1]
+                        param_value = ""
+                    else:
+                        raise ValueError(f"Parameter line missing colon: {line}")
+                else:
+                    param_name, param_value = param_line.split(':', 1)
+                
+                current_param = param_name.strip()
+                current_value.append(param_value)
+                
+                if current_param in result['arguments']:
+                    raise DuplicateArgumentError(f"Duplicate parameter: {current_param}")
+            else:
+                if current_param is None:
+                    if not line.strip():
+                        continue
+                    raise ValueError(f"Line '{line}' is not part of any parameter")
+                current_value.append(line)
+        
+        if current_param is not None:
+            value_str = '\n'.join(current_value).strip()
+            parsed_value = parse_value(value_str)
+            result['arguments'][current_param] = parsed_value
+
+        return result

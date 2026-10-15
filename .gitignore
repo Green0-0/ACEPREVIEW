@@ -30,5 +30,3 @@ rollouts/
 .DS_Store
 
 
-# Personal course notes, not part of the package (remove this line to publish them)
-class_notes/
