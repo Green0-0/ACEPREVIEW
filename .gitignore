@@ -1,0 +1,34 @@
+# Secrets: never commit API keys. Put ANTHROPIC_API_KEY in a local .env file.
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Run artifacts: rollouts, NEAT history, population state, evaluation scratch
+.agent2/
+.ace/
+rollouts/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+
+# Personal course notes, not part of the package (remove this line to publish them)
+class_notes/

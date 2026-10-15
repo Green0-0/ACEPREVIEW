@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ace"
+version = "0.1.0"
+description = "ACE: evolvable worker-graph pipelines (NEAT) for file-viewing and editing agents, built on agent2"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.12"
+dependencies = [
+    "agent2",
+    "fastapi>=0.110",
+    "httpx>=0.27",
+    "openai>=3.3.1",
+    "pydantic>=2.13.4",
+    "tree-sitter>=0.25.2",
+    "tree-sitter-python>=0.25.0",
+    "uvicorn>=0.29",
+]
+
+[dependency-groups]
+dev = ["pytest>=9.1.1"]
+
+[tool.uv.sources]
+agent2 = { path = "agent2", editable = true }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

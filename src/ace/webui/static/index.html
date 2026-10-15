@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ACE studio</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <!-- ES modules; app.js imports the others. Preloaded so every module is fetched up front. -->
+  <link rel="modulepreload" href="/static/ui.js">
+  <link rel="modulepreload" href="/static/api.js">
+  <link rel="modulepreload" href="/static/charts.js">
+  <link rel="modulepreload" href="/static/graph.js">
+  <link rel="modulepreload" href="/static/diff.js">
+  <link rel="modulepreload" href="/static/chat.js">
+  <script>
+    // Apply the persisted theme before first paint to avoid a flash.
+    (function () {
+      try {
+        var t = localStorage.getItem('ace.theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* storage unavailable */ }
+    })();
+  </script>
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <a class="brand" href="#/runs">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">ACE studio</span>
+      <span class="brand-sub">worker graphs · NEAT</span>
+    </a>
+    <nav class="segmented" aria-label="Main">
+      <a class="seg-btn" href="#/runs">Runs</a>
+    </nav>
+    <div class="topbar-right">
+      <span class="chip" title="The analysis UI never writes to a run directory">read-only</span>
+      <div class="chips" id="health-chip" aria-live="polite"><span class="chip chip-warn">connecting…</span></div>
+      <button class="icon-btn" id="theme-toggle" type="button" title="Toggle theme" aria-label="Toggle light/dark theme">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06"/></svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M13.5 9.5A6 6 0 0 1 6.5 2.5a6 6 0 1 0 7 7z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="app" class="app" tabindex="-1"></main>
+
+  <div id="toasts" class="toasts" aria-live="assertive" aria-atomic="false"></div>
+  <div id="modal-root"></div>
+
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>
