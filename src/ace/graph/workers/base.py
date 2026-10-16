@@ -165,6 +165,10 @@ async def run_agent(agent: Agent) -> str:
         raise
     except Exception as exc:
         raise GraphFailure(f"{label}: agent run failed: {type(exc).__name__}: {exc}") from exc
+    finally:
+        release = getattr(agent.client, "release", None)  # pooled clients: free the slot
+        if callable(release):
+            release()
     if result is None:
         raise GraphFailure(f"{label}: agent produced no final message")
     return result if isinstance(result, str) else str(result)

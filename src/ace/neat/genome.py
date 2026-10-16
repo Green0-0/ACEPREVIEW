@@ -107,6 +107,9 @@ class Genome:
     evaluated_at: str | None = None
     eval_duration_s: float | None = None
     task_scores: list[float] = field(default_factory=list)
+    # Raw fitness of every minibatch this genome was scored on (elites are re-scored each
+    # generation by minibatch evaluators); ``fitness`` is then their mean.
+    fitness_history: list[float] = field(default_factory=list)
 
     # ------------------------------------------------------------------ graph
 
@@ -328,6 +331,7 @@ class Genome:
             "evaluated_at": self.evaluated_at,
             "eval_duration_s": self.eval_duration_s,
             "task_scores": list(self.task_scores),
+            "fitness_history": list(self.fitness_history),
             "nodes": [
                 {
                     "innovation": g.innovation,
@@ -389,6 +393,7 @@ class Genome:
                 None if data.get("eval_duration_s") is None else float(data["eval_duration_s"])
             ),
             task_scores=[float(x) for x in data.get("task_scores", []) or []],
+            fitness_history=[float(x) for x in data.get("fitness_history", []) or []],
         )
 
 

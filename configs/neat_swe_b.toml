@@ -1,0 +1,23 @@
+# Run B: smaller population, larger minibatch (less noisy fitness), default-ish mutation.
+population_size = 12
+generations = 30
+node_cost = 0.01
+crossover_rate = 0.5
+initial_min_workers = 1
+initial_max_workers = 4
+max_workers = 8
+seed = 1
+[speciation]
+target_species = 3
+stagnation_generations = 6
+elitism_per_species = 1
+survival_fraction = 0.4
+[mutation]
+p_property = 0.8
+p_property_per_gene = 0.1
+p_add_connection = 0.3
+p_add_worker = 0.15
+p_insert_merger = 0.05
+p_remove_connection = 0.05
+p_remove_worker = 0.05
+p_toggle_enable = 0.02

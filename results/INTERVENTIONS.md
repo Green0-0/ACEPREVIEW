@@ -1,0 +1,16 @@
+# Manual interventions during runs (2026-10-15)
+- 10:4x EDT: NEAT runs restarted twice from scratch after adding client-side admission control (prefix-cache thrash fix); aborted runs kept in runs/_aborted/.
+- 12:40 EDT: neat_a: bootstrap set the speciation threshold to 0.268 (4 near-identical representatives), giving 11 species of ~1 genome (elites ~= population). Stopped after generation 2, set speciator.threshold = 2.0 in population_state.json (original saved as population_state.gen2.orig.json), resumed from generation 2. Batches are a deterministic function of (seed, generation), so generation 3 re-runs on the same batch.
+- 14:15 EDT: both NEAT runs paused at generation boundaries (neat_a gen 5, neat_b gen 5) for candidate selection. select_genomes.py (shrunk mean, k=6) picked top-2 per run -> runs/selection. Each evaluated on data/train_val40.jsonl (40 held-out instances, 27 repos disjoint from the training pool). Pre-registered rule: highest mean val proxy -> winner neat_b_0_37b607a6 (0.316 vs baseline 0.211 on the same 40, Wilcoxon p=0.025).
+- 14:38 EDT: winner launched on all 500 SWE-bench Verified (runs/verified/neat_best, 12 shards). neat_b resumed from gen 5 at low admission cap only to extend the evolution curve; later generations were NOT used for selection.
+- baseline_r2 (second baseline run on Verified) paused at 168/500 at 13:32 to free capacity; resumable.
+- 10-15 18:34 final eval: neat_best 124/500 vs baseline_r1 37/500; launched evals of baseline_r2 and neat_best_r2 (12999845, 12999866); raised NEAT caps neat=6 neata=6 to keep fleet busy.
+- 10-15 18:54 replicates: baseline_r2 36/500, neat_best_r2 117/500. Analysis in runs/analysis{,_gold}. NEAT A/B continue for curves.
+- 10-15 19:12 user request: baseline hit 30-step limit on 255/500 (216 empty). Launched baseline_unl (max_steps 500, context-bounded), 12 shards cap unl=2; NEAT caps lowered to 2.
+- 10-15 19:52 user question: hand-built nested tree (4 chained editors, 2 PMs, judge) on val40 -> runs/val/nested_tree
+- 10-15 23:28 THRASH: no-limit baseline contexts ~64K; caps unl=2 x12 shards over-admitted (prefix hit 20%->0.2%, gen ~8 tok/s/server). Lowered unl=1, neat=1, val=1, paused NEAT A (neata=0).
+- 10-16 00:29 thrash persists (hit<1%, ~20 reqs/server x 35-64K ctx > 508K KV). Paused NEAT B too (neat=0); unl 12x1 + val 2x1 per endpoint remain.
+- 10-16 00:56 still thrashing (hit 0.2%, ~20 conv/server x 55K vs 508K KV). Cancelled unl shards 7-11 (resume-safe); relaunch after shards 0-6 finish.
+- 10-16 01:17 thrash cleared (hit 72-97%), servers near idle: relaunched unl 7-11 early, NEAT B neat=1.
+- 10-16 01:24 nested tree val40: 0.326 vs winner 0.316 (p=0.46), 918K vs 403K tokens.
+- 10-16 02:53 baseline_unl eval: 43/500. analysis_v2 written. NEAT A/B running at caps 3.

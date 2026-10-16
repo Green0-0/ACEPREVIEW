@@ -1,0 +1,456 @@
+{
+  "n_instances": 464,
+  "systems": {
+    "baseline": {
+      "resolved": 37,
+      "rate": 0.07974137931034483,
+      "wilson95": [
+        0.05840359724579088,
+        0.107980922642992
+      ],
+      "preds": 500,
+      "evaluated": 500,
+      "empty_patches": 316,
+      "agent_failures": 0,
+      "eval_status": {
+        "unresolved": 425,
+        "resolved": 37,
+        "error": 2
+      },
+      "tokens_total_sum": 176994347.0,
+      "tokens_median": 356462.5,
+      "tokens_uncached_median": 43281.0,
+      "calls_median": 30.0,
+      "resolved_per_Mtok": 0.2090462245102099,
+      "resolved_per_Mtok_uncached": 0.8926597625143842,
+      "by_difficulty": {
+        "15 min - 1 hour": {
+          "resolved": 12,
+          "n": 244
+        },
+        "1-4 hours": {
+          "resolved": 0,
+          "n": 42
+        },
+        "<15 min fix": {
+          "resolved": 25,
+          "n": 175
+        },
+        ">4 hours": {
+          "resolved": 0,
+          "n": 3
+        }
+      }
+    },
+    "neat": {
+      "resolved": 124,
+      "rate": 0.2672413793103448,
+      "wilson95": [
+        0.22900761261843272,
+        0.30929765993535463
+      ],
+      "preds": 500,
+      "evaluated": 500,
+      "empty_patches": 90,
+      "agent_failures": 85,
+      "eval_status": {
+        "unresolved": 340,
+        "resolved": 124
+      },
+      "tokens_total_sum": 234415105.0,
+      "tokens_median": 418914.0,
+      "tokens_uncached_median": 121421.5,
+      "calls_median": 30.0,
+      "resolved_per_Mtok": 0.5289761510888984,
+      "resolved_per_Mtok_uncached": 1.1904739846248171,
+      "by_difficulty": {
+        "15 min - 1 hour": {
+          "resolved": 56,
+          "n": 244
+        },
+        "1-4 hours": {
+          "resolved": 2,
+          "n": 42
+        },
+        "<15 min fix": {
+          "resolved": 66,
+          "n": 175
+        },
+        ">4 hours": {
+          "resolved": 0,
+          "n": 3
+        }
+      }
+    },
+    "baseline_r2": {
+      "resolved": 36,
+      "rate": 0.07758620689655173,
+      "wilson95": [
+        0.05656626407204635,
+        0.10554330463667902
+      ],
+      "preds": 500,
+      "evaluated": 500,
+      "empty_patches": 300,
+      "agent_failures": 0,
+      "eval_status": {
+        "unresolved": 428,
+        "resolved": 36
+      },
+      "tokens_total_sum": 185710528.0,
+      "tokens_median": 361258.5,
+      "tokens_uncached_median": 105483.0,
+      "calls_median": 30.0,
+      "resolved_per_Mtok": 0.19385007617877215,
+      "resolved_per_Mtok_uncached": 0.39100174647446756,
+      "by_difficulty": {
+        "15 min - 1 hour": {
+          "resolved": 12,
+          "n": 244
+        },
+        "1-4 hours": {
+          "resolved": 0,
+          "n": 42
+        },
+        "<15 min fix": {
+          "resolved": 24,
+          "n": 175
+        },
+        ">4 hours": {
+          "resolved": 0,
+          "n": 3
+        }
+      }
+    },
+    "neat_r2": {
+      "resolved": 117,
+      "rate": 0.2521551724137931,
+      "wilson95": [
+        0.2147875697664728,
+        0.29359304452691193
+      ],
+      "preds": 500,
+      "evaluated": 500,
+      "empty_patches": 81,
+      "agent_failures": 80,
+      "eval_status": {
+        "resolved": 117,
+        "unresolved": 347
+      },
+      "tokens_total_sum": 218303865.0,
+      "tokens_median": 346250.0,
+      "tokens_uncached_median": 115089.0,
+      "calls_median": 26.0,
+      "resolved_per_Mtok": 0.5359501995074618,
+      "resolved_per_Mtok_uncached": 1.3839792291450979,
+      "by_difficulty": {
+        "15 min - 1 hour": {
+          "resolved": 49,
+          "n": 244
+        },
+        "1-4 hours": {
+          "resolved": 2,
+          "n": 42
+        },
+        "<15 min fix": {
+          "resolved": 66,
+          "n": 175
+        },
+        ">4 hours": {
+          "resolved": 0,
+          "n": 3
+        }
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "reference": "baseline",
+      "system": "neat",
+      "rate_diff": 0.18749999999999997,
+      "bootstrap95": [
+        0.14655172413793102,
+        0.23060344827586207
+      ],
+      "discordant_ref_only": 16,
+      "discordant_system_only": 103,
+      "mcnemar_exact_p_two_sided": 9.54663360744815e-17,
+      "mcnemar_exact_p_one_sided": 4.773316803724075e-17,
+      "tokens_median_ratio": 1.486466398036235,
+      "tokens_wilcoxon": {
+        "statistic": 36288.0,
+        "p": 1.0082346209175506e-09,
+        "n": 464
+      },
+      "gee": {
+        "odds_ratio_system": 4.459163835940764,
+        "ci95": [
+          3.091794003806025,
+          6.431263561312429
+        ],
+        "p": 1.2334180198582559e-15
+      }
+    },
+    {
+      "reference": "baseline",
+      "system": "baseline_r2",
+      "rate_diff": -0.0021551724137931078,
+      "bootstrap95": [
+        -0.023706896551724144,
+        0.02155172413793103
+      ],
+      "discordant_ref_only": 15,
+      "discordant_system_only": 14,
+      "mcnemar_exact_p_two_sided": 1.0,
+      "mcnemar_exact_p_one_sided": 0.644464448094368,
+      "tokens_median_ratio": 1.0155948141774136,
+      "tokens_wilcoxon": {
+        "statistic": 50140.0,
+        "p": 0.2154830574493185,
+        "n": 464
+      },
+      "gee": {
+        "odds_ratio_system": 0.9696786462159018,
+        "ci95": [
+          0.700621695303299,
+          1.3420604632005557
+        ],
+        "p": 0.8526884707889492
+      }
+    },
+    {
+      "reference": "baseline",
+      "system": "neat_r2",
+      "rate_diff": 0.17241379310344826,
+      "bootstrap95": [
+        0.13146551724137928,
+        0.21336206896551724
+      ],
+      "discordant_ref_only": 15,
+      "discordant_system_only": 95,
+      "mcnemar_exact_p_two_sided": 2.141608136429023e-15,
+      "mcnemar_exact_p_one_sided": 1.0708040682145116e-15,
+      "tokens_median_ratio": 1.394700839466143,
+      "tokens_wilcoxon": {
+        "statistic": 40590.0,
+        "p": 3.846936569631444e-06,
+        "n": 464
+      },
+      "gee": {
+        "odds_ratio_system": 4.1448140895353065,
+        "ci95": [
+          2.880780643343344,
+          5.9634821125680775
+        ],
+        "p": 1.855028918470324e-14
+      }
+    }
+  ],
+  "notes": [],
+  "proxy_validity": {
+    "n": 1856,
+    "auc": 0.8804658521070329,
+    "pointbiserial_r": 0.53668274533281,
+    "p": 5.894477761211703e-139,
+    "mean_proxy_resolved": 0.7006199518753984,
+    "mean_proxy_unresolved": 0.2298244709832858
+  },
+  "neat": {
+    "/usr/project/xtmp/kg349/ace/runs/neat_a": {
+      "generations": 10,
+      "task_evaluations": 1142,
+      "failure_rate": 0.5245183887915937,
+      "mean_task_score_by_batch": [
+        [
+          0,
+          0.08952979076995406,
+          168
+        ],
+        [
+          1,
+          0.22862523019922296,
+          96
+        ],
+        [
+          2,
+          0.171127000974022,
+          96
+        ],
+        [
+          3,
+          0.22310279788866647,
+          147
+        ],
+        [
+          4,
+          0.20529849414810938,
+          96
+        ],
+        [
+          5,
+          0.19593576534797,
+          96
+        ],
+        [
+          6,
+          0.09096310993477937,
+          147
+        ],
+        [
+          7,
+          0.2758579652198674,
+          96
+        ],
+        [
+          8,
+          0.425298096499562,
+          96
+        ],
+        [
+          9,
+          0.025225694444444446,
+          96
+        ],
+        [
+          10,
+          0.0,
+          8
+        ]
+      ],
+      "best_fitness_by_generation": [
+        0.31508838383838383,
+        0.3869914996964177,
+        0.2947530864197531,
+        0.35714285714285715,
+        0.3804655067155067,
+        0.3626533882783882,
+        0.3059513999565343,
+        0.4412909169238283,
+        0.5555555555555556,
+        0.2777777777777778
+      ],
+      "mean_fitness_by_generation": [
+        0.12959948077020816,
+        0.2114679743618041,
+        0.19468469320398038,
+        0.2099512738523759,
+        0.20507336435187934,
+        0.2059949597299128,
+        0.1490000244187263,
+        0.23310167333253223,
+        0.37059225148766173,
+        0.11670943847260241
+      ],
+      "spearman_generation_vs_mean": {
+        "rho": -0.17272727272727276,
+        "p": 0.6115423848512369
+      }
+    },
+    "/usr/project/xtmp/kg349/ace/runs/neat_b": {
+      "generations": 13,
+      "task_evaluations": 1337,
+      "failure_rate": 0.1682872101720269,
+      "mean_task_score_by_batch": [
+        [
+          0,
+          0.16913619240949523,
+          168
+        ],
+        [
+          1,
+          0.3470752759366709,
+          96
+        ],
+        [
+          2,
+          0.3033708238251757,
+          96
+        ],
+        [
+          3,
+          0.29801650046434874,
+          96
+        ],
+        [
+          4,
+          0.34507824411821053,
+          96
+        ],
+        [
+          5,
+          0.29469564060636333,
+          96
+        ],
+        [
+          6,
+          0.2863794422583658,
+          113
+        ],
+        [
+          7,
+          0.22153109326065587,
+          96
+        ],
+        [
+          8,
+          0.2880705667921957,
+          96
+        ],
+        [
+          9,
+          0.19997308620902188,
+          96
+        ],
+        [
+          10,
+          0.31891165103565206,
+          96
+        ],
+        [
+          11,
+          0.28009409345398983,
+          96
+        ],
+        [
+          12,
+          0.15351829836485423,
+          96
+        ]
+      ],
+      "best_fitness_by_generation": [
+        0.303230890464933,
+        0.5159855288269154,
+        0.47842261904761907,
+        0.4719842936437764,
+        0.44012757667169433,
+        0.45904193845370317,
+        0.44182692307692306,
+        0.37003626855600535,
+        0.5153667654872894,
+        0.4046057312284932,
+        0.4549611973392461,
+        0.4114784434972093,
+        0.3449810176674412
+      ],
+      "mean_fitness_by_generation": [
+        0.20552070351323784,
+        0.32851464861195084,
+        0.3105973209648643,
+        0.3219032359460137,
+        0.3581161909577633,
+        0.30976303243986353,
+        0.2829258970073382,
+        0.2552815495086235,
+        0.28904439255321174,
+        0.20920317239725492,
+        0.32609861473638035,
+        0.2870429767869801,
+        0.17463330609657626
+      ],
+      "spearman_generation_vs_mean": {
+        "rho": -0.40659340659340654,
+        "p": 0.16797834614789645
+      }
+    }
+  }
+}

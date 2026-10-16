@@ -1,0 +1,7 @@
+population_size = 4
+generations = 1
+initial_min_workers = 1
+initial_max_workers = 3
+max_workers = 6
+[speciation]
+target_species = 2

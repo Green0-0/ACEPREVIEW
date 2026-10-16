@@ -19,6 +19,8 @@ tests/neat_tests/     evolution tests
 agent2/               the attached agent2 library (its own git repository)
 ACE_SCHEMA.md         how ACE works
 GRAPH_NEAT_DESIGN.md  the interface contract for ace.graph and ace.neat
+EXPERIMENT.md         the SWE-bench Verified experiment: how to reproduce, isolation, statistics
+results/              experiment reports, figures, evolved graphs and the run log
 ```
 
 ## Setup

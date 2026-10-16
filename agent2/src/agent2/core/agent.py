@@ -18,12 +18,29 @@ if TYPE_CHECKING:
 
 _STOP = object()
 
+FINAL_STEP_NOTICE = (
+    "You have reached the step limit. Do not call any more tools. Reply now with your "
+    "final answer: a short summary of what you found and what you changed."
+)
+
+
+def _is_context_overflow(exc: BaseException) -> bool:
+    status = getattr(exc, "status_code", None)
+    text = str(exc).lower()
+    return status == 400 and ("context length" in text or "maximum context" in text
+                              or "too long" in text or "max_model_len" in text)
+
 
 class Agent:
     """
     Represents an active agent in the system.
     Each agent holds its own configuration, task, and a Rollout to track history.
+
+    ``graceful_step_limit`` (class attribute, default False): when True, the last allowed
+    step is sent without tools after a ``FINAL_STEP_NOTICE`` user message, so the agent
+    ends with a final answer (and keeps its workspace edits) instead of raising.
     """
+    graceful_step_limit: bool = False
     def __init__(self, session: Session, workspace: Workspace, config: AgentConfig, prompt: str, unique_id: str | None = None, parent_id: Optional[str] = None, client: Any = None) -> None:
         """
         Initializes an Agent with a configuration and a unique rollout context.
@@ -108,9 +125,9 @@ class Agent:
         """Persist the rollout through its owning session."""
         self.session.save_rollout(self.rollout)
 
-    async def _run_llm_step(self):
+    async def _run_llm_step(self, final: bool = False):
         """Executes a single step of the LLM generation using raw_chat."""
-        tools_schema = [tool.openai_schema for tool in self.tools.values()] if self.tools else None
+        tools_schema = [tool.openai_schema for tool in self.tools.values()] if self.tools and not final else None
         
         kwargs = {
             "model": self.config.model,
@@ -127,7 +144,16 @@ class Agent:
         The main loop for the agent.
         It processes incoming messages, then performs an LLM step.
         """
-        for _ in range(self.config.max_steps):
+        for step in range(self.config.max_steps):
+            final = (
+                self.graceful_step_limit
+                and step == self.config.max_steps - 1
+                and bool(self.tools)
+            )
+            if final and self.pending_continuation is not None:
+                # An interactive open_* edit is still waiting for its replacement block;
+                # abandon it so the last step can be a plain final answer.
+                self.pending_continuation = None
             inbox = []
             while not self.inbox.empty():
                 msg = self.inbox.get_nowait()
@@ -151,8 +177,22 @@ class Agent:
                 else:
                     self.followup(content)
                 
+            if final:
+                last = self.rollout.raw_chat[-1] if self.rollout.raw_chat else None
+                if last is not None and last.get("role") == "user" and isinstance(last.get("content"), str):
+                    last["content"] += f"\n\n{FINAL_STEP_NOTICE}"
+                else:
+                    self.rollout.raw_chat.append({"role": "user", "content": FINAL_STEP_NOTICE})
             # 2. Run the LLM step (do not interrupt as it wastes tokens)
-            response = await self._run_llm_step()
+            try:
+                response = await self._run_llm_step(final=final)
+            except Exception as exc:
+                # The conversation outgrew the model's context window: end the run like a
+                # step limit, keeping the workspace edits, instead of losing all work.
+                if self.graceful_step_limit and _is_context_overflow(exc):
+                    await self.save_rollout()
+                    return "(context limit reached)"
+                raise
             
             # Append assistant message to raw_chat
             self.rollout.raw_chat.append(response.choices[0].message.model_dump(exclude_unset=True))
@@ -183,11 +223,16 @@ class Agent:
             
             await self.save_rollout()
 
-            if consumed:
+            if consumed and not final:
                 continue
             message = response.choices[0].message
+            if final:
+                return getattr(message, "content", None) or "(step limit reached)"
             if getattr(message, "tool_calls", None):
                 raise RuntimeError("Assistant tool calls were not consumed by a hook")
-            return getattr(message, "content", None)
+            content = getattr(message, "content", None)
+            if self.graceful_step_limit and not (content or "").strip():
+                return "(no final message)"
+            return content
 
         raise RuntimeError(f"Agent {self.rollout.id!r} exceeded {self.config.max_steps} LLM steps")

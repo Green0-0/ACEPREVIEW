@@ -78,8 +78,40 @@ class DirectoryConstructor(_ProviderConstructor):
         super().__init__(key, format_lite, format_full)
         self.dir_format = dir_format
 
+    max_chars: int | None = None
+    """Class-wide listing budget. None lists every path; otherwise directories deeper than
+    the largest depth that fits are collapsed into ``dir/ (N files)`` lines."""
+
     def value(self, agent: Agent) -> str:
-        return "\n".join(sorted(agent.workspace.paths()))
+        return compact_listing(sorted(agent.workspace.paths()), self.max_chars)
+
+
+def compact_listing(paths: list[str], max_chars: int | None) -> str:
+    """Every path, or a depth-limited listing of at most ``max_chars`` characters."""
+    full = "\n".join(paths)
+    if max_chars is None or len(full) <= max_chars:
+        return full
+    depth = max((p.count("/") for p in paths), default=0)
+    text = ""
+    for limit in range(depth, -1, -1):
+        lines: list[str] = []
+        counts: dict[str, int] = {}
+        for path in paths:
+            parts = path.split("/")
+            if len(parts) - 1 <= limit:
+                lines.append(path)
+            else:
+                folder = "/".join(parts[: limit + 1]) + "/"
+                if folder not in counts:
+                    lines.append(folder)
+                counts[folder] = counts.get(folder, 0) + 1
+        text = "\n".join(
+            f"{line} ({counts[line]} files; use list_folder to see them)" if line in counts else line
+            for line in lines
+        )
+        if len(text) <= max_chars:
+            return text
+    return text[:max_chars].rsplit("\n", 1)[0] + "\n... (listing truncated)"
 
 
 class OSInfoConstructor(_ProviderConstructor):

@@ -1,0 +1,73 @@
+[
+  {
+    "name": "neat_a_0_54ce4881",
+    "path": "/usr/project/xtmp/kg349/ace/runs/selection/neat_a_0_54ce4881.json",
+    "run": "/usr/project/xtmp/kg349/ace/runs/neat_a",
+    "genome_ids": [
+      "54ce48818e664cc2b337741133d811b5"
+    ],
+    "train_tasks": 13,
+    "train_mean": 0.3511,
+    "shrunk": 0.2941,
+    "workers": 4,
+    "types": [
+      "editor",
+      "editor",
+      "listviewer",
+      "pickmerger"
+    ]
+  },
+  {
+    "name": "neat_a_1_b1a65581",
+    "path": "/usr/project/xtmp/kg349/ace/runs/selection/neat_a_1_b1a65581.json",
+    "run": "/usr/project/xtmp/kg349/ace/runs/neat_a",
+    "genome_ids": [
+      "b1a65581ccbe4455a1dec90bcc751ede"
+    ],
+    "train_tasks": 21,
+    "train_mean": 0.3199,
+    "shrunk": 0.2867,
+    "workers": 5,
+    "types": [
+      "editor",
+      "editor",
+      "listviewer",
+      "pickmerger",
+      "viewer"
+    ]
+  },
+  {
+    "name": "neat_b_0_37b607a6",
+    "path": "/usr/project/xtmp/kg349/ace/runs/selection/neat_b_0_37b607a6.json",
+    "run": "/usr/project/xtmp/kg349/ace/runs/neat_b",
+    "genome_ids": [
+      "37b607a653f2437fbc1c696c4c502d3b"
+    ],
+    "train_tasks": 16,
+    "train_mean": 0.4389,
+    "shrunk": 0.3957,
+    "workers": 3,
+    "types": [
+      "editor",
+      "editor",
+      "pickmerger"
+    ]
+  },
+  {
+    "name": "neat_b_1_abe07840",
+    "path": "/usr/project/xtmp/kg349/ace/runs/selection/neat_b_1_abe07840.json",
+    "run": "/usr/project/xtmp/kg349/ace/runs/neat_b",
+    "genome_ids": [
+      "abe0784018d84109b723343c70cc794e"
+    ],
+    "train_tasks": 16,
+    "train_mean": 0.4335,
+    "shrunk": 0.3918,
+    "workers": 3,
+    "types": [
+      "editor",
+      "editor",
+      "pickmerger"
+    ]
+  }
+]

@@ -390,6 +390,10 @@ class Population:
         rng = self.rng
         self.generation += 1
         self._generation_begins()
+        # Minibatch evaluators draw fresh tasks for every generation (ace.neat.minibatch).
+        new_batch = getattr(self.evaluator, "new_batch", None)
+        if callable(new_batch):
+            new_batch(self.generation)
         self._reset_adjusted()
         speciator = self.speciator
         speciator.speciate(self.genomes, self.generation)
@@ -432,7 +436,26 @@ class Population:
         self.genomes = next_genomes[: cfg.population_size]
         self._reset_adjusted()
         children = [g for g in self.genomes if g.fitness is None]
-        await self._evaluate_genomes(children)
+        # With a fresh minibatch per generation, an elite's old fitness was measured on other
+        # tasks. Re-score elites on this generation's batch and keep the running mean over
+        # every batch they have seen (fitness_history), so carried-over genomes are compared
+        # on the same tasks as their offspring and lucky single-batch scores regress.
+        rescored: list[Genome] = []
+        if getattr(self.evaluator, "reevaluate_elites", False):
+            kept = {id(g) for g in self.genomes}
+            for elite in elites:
+                if id(elite) in kept and elite.fitness is not None:
+                    history = getattr(elite, "fitness_history", None) or [float(elite.fitness)]
+                    elite.fitness_history = history
+                    elite.fitness = None
+                    rescored.append(elite)
+        await self._evaluate_genomes(children + rescored)
+        for genome in children:
+            genome.fitness_history = [float(genome.fitness)]
+        for elite in rescored:
+            elite.fitness_history = elite.fitness_history + [float(elite.fitness)]
+            elite.fitness = statistics.fmean(elite.fitness_history)
+            elite.adjusted_fitness = self._base_adjusted(elite)
         self._reset_adjusted()
         self._save_innovations()
         self.last_elites = [g.id for g in elites]
