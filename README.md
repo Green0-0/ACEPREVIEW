@@ -1,36 +1,32 @@
-# ACE
+# ACE: Discovering Agentic Pipelines with NEAT
 
-ACE builds coding pipelines out of LLM workers and evolves them. A worker graph is a typed DAG of workers (viewers, list viewers, editors, view-editors, critics, judge-mergers and pick-mergers) that pass views of the code, edits and reports to each other and end in exactly one proposed edit of a repository. Every worker reads the same pristine repository and edits a private workspace, so a graph run never changes the project on disk: its result is an `Edit` and a git patch.
-
-The evolution side (`ace.neat`) applies NEAT to these graphs. Genomes encode workers and typed connections with global innovation numbers; mutation uses a typed insertion table that only produces valid graphs, crossover repairs or falls back, and speciation protects new structures. Worker settings (role, strategy, instructions, context budgets, tool sets, edit format) are categorical genes. Fitness comes from running each graph on a set of tasks with a scorer, or from a deterministic structural mock for dry runs.
+ACE builds coding pipelines out of LLM workers and evolves their structure with NEAT. A pipeline is a typed directed acyclic graph of workers (viewers, list viewers, editors, view-editors, critics, judge-mergers and pick-mergers) whose edges carry views of the code, edits and reports, and which ends in exactly one proposed edit of a repository. Every worker reads the same pristine repository and edits a private workspace, so a run never changes the project on disk: its result is a git patch.
 
 ## Layout
 
 ```
-src/ace/graph/        worker-graph runtime: types, graph, views, rendering, edits, ACE format,
-                      codebase graph, view recording, properties, prompts, LLM client, runner
-src/ace/graph/workers/  one module per worker type, plus the Worker base class
-src/ace/neat/         config, genome, innovation DB, mutation, crossover, speciation,
-                      population, history, evaluation
-scripts/run_graph.py  run one worker graph on a project and print the diff
-scripts/run_neat.py   evolve worker graphs
-tests/graph_tests/    graph runtime tests (fake LLM clients, no network)
-tests/neat_tests/     evolution tests
-agent2/               the attached agent2 library (its own git repository)
-ACE_SCHEMA.md         how ACE works
-GRAPH_NEAT_DESIGN.md  the interface contract for ace.graph and ace.neat
-EXPERIMENT.md         the SWE-bench Verified experiment: how to reproduce, isolation, statistics
-results/              experiment reports, figures, evolved graphs and the run log
+src/ace/graph/          worker-graph runtime (types, views, edits, prompts, LLM client, runner)
+src/ace/graph/workers/  one module per worker type
+src/ace/neat/           NEAT: genome, mutation, crossover, speciation, population, evaluation
+src/ace/swebench/       SWE-bench data loading, task prompt, patch-similarity proxy, sandbox eval
+src/ace/serving.py      pooled clients over a directory of vLLM endpoints
+src/ace/webui/          read-only web UI over NEAT run directories
+scripts/                command-line entry points (see below)
+configs/                NEAT hyperparameter files
+slurm/                  Slurm job files for vLLM servers, drivers, image pulls and evaluation
+tests/                  pytest suite (fake LLM clients, no network)
+results/                reports, figures, the evolved graphs and the run log (results/README.md)
+agent2/                 the agent runtime ACE is built on
 ```
 
 ## Setup
 
 ```
-uv sync
-cp .env.example .env    # then set ANTHROPIC_API_KEY in .env
+uv sync                    # runtime and tests
+uv sync --group analysis   # adds numpy, scipy, statsmodels, pandas, matplotlib, datasets for the analysis scripts
 ```
 
-The scripts read the key from the environment, then from `.env` at the project root, then from `agent2/.env`, so a key already kept in `agent2/.env` also works. Both `.env` files are git-ignored. Never commit a key.
+Python 3.12 or newer. Runs against vLLM servers need no API key. Runs against a hosted model read the key from the environment or from `.env` at the project root (`cp .env.example .env`). `.env` is git-ignored; never commit a key.
 
 ## Tests
 
@@ -38,50 +34,64 @@ The scripts read the key from the environment, then from `.env` at the project r
 uv run pytest -q
 ```
 
-The suite runs with fake LLM clients and needs no network or API key.
-
-## Running a Single Graph
+## Running a single graph
 
 ```
 uv run python scripts/run_graph.py path/to/project "Fix the off-by-one error in pagination"
-uv run python scripts/run_graph.py path/to/project "..." --graph graph.json --print-views
+uv run python scripts/run_graph.py path/to/project "..." --graph results/graphs/neat_best.json --print-views
 ```
 
-Without `--graph` the graph is one EDITOR feeding END. A graph file is `WorkerGraph.to_json()` output, for example the `"graph"` field of a `best_genome.json`. The script prints each worker's rollouts, view size, edited paths and report excerpt, then the final git patch. Project files are never modified; worker rollouts go to `<project>/.agent2/task` unless `--rollout-dir` is given. `--model`, `--api-base` and `--api-key-env` select the endpoint.
+Without `--graph` the graph is a single editor. `--graph` takes a graph JSON or a genome file such as `best_genome.json`. The script prints each worker's view size, edited paths and report, then the final patch. `--model`, `--api-base` and `--api-key-env` select the endpoint.
 
-## Running an Evolution
+## Running an evolution
 
-A dry run with the structural mock evaluator, no network:
+A dry run with a mock evaluator, no network:
 
 ```
 uv run python scripts/run_neat.py --mock --generations 5 --population 12
 ```
 
-A real run needs a tasks file, a JSON list of task objects:
-
-```json
-[
-  {"project_dir": "projects/shop", "prompt": "Make the cart total include tax.", "scorer": "nonempty_diff"},
-  {"project_dir": "/abs/path/to/repo", "prompt": "...", "scorer": "mypkg.scoring:run_tests"}
-]
-```
+Evolution on SWE-style tasks with the patch-similarity fitness, against vLLM endpoints registered under `--endpoints-dir`:
 
 ```
-uv run python scripts/run_neat.py --tasks tasks.json --model claude-haiku-5-5 --history-dir runs/neat1
-uv run python scripts/run_neat.py --tasks tasks.json --history-dir runs/neat1 --resume runs/neat1/population_state.json
+uv run python scripts/run_neat_swe.py --config configs/neat_swe_b.toml --pool data/train_pool.jsonl --history-dir runs/neat_b --batch-size 8
+uv run python scripts/run_neat_swe.py --config configs/neat_swe_b.toml --pool data/train_pool.jsonl --history-dir runs/neat_b --resume runs/neat_b/population_state.json
 ```
 
-Relative project dirs resolve against the tasks file. `scorer` is `nonempty_diff` or a `module:function` called as `scorer(edit, session)`; a SWE-bench scorer applies the edit and runs the instance's tests this way. `--config` takes a NEAT TOML file; `--generations`, `--population`, `--seed` and `--concurrency` override it.
+The history directory gets `genomes.jsonl`, `species.jsonl`, `generations.jsonl`, `evaluations.jsonl`, `innovations.json`, `population_state.json` (saved every generation), `best_genome.json` and the worker rollouts. Generic tasks with a custom scorer go through `scripts/run_neat.py --tasks tasks.json` instead.
 
-## Where Output Goes
+## SWE-bench pipeline
 
-The history directory defaults to `.ace/neat` (relative to the working directory) and is git-ignored. It holds `genomes.jsonl`, `species.jsonl`, `generations.jsonl`, `innovations.json`, `population_state.json` (saved every generation), `best_genome.json`, and `rollouts/<genome id>/<task index>/` with the worker rollouts of every task run. Nothing is written into task project folders.
+Data preparation, in order: `scripts/swebench_select_candidates.py` (filter SWE-Fixer-Train), `scripts/swebench_materialize.py` (check out base commits), `scripts/swebench_finalize.py` (write the training pool, validation and test task files). `slurm/pull_images.sbatch` pulls the sandbox images and `slurm/vllm_server.sbatch` starts a model server.
 
-## agent2
+```
+uv run python scripts/select_genomes.py runs/neat_a runs/neat_b --top 2 --out runs/selection
+uv run python scripts/run_swe.py --mode graph --graph runs/selection/<candidate>.json --instances data/train_val40.jsonl --out runs/val/<candidate>/preds.jsonl
+uv run python scripts/run_swe.py --mode baseline --instances data/verified_tasks.jsonl --max-steps 30 --out runs/verified/baseline/preds.jsonl --shard 0/12
+uv run python scripts/run_swe.py --mode graph --graph results/graphs/neat_best.json --instances data/verified_tasks.jsonl --out runs/verified/neat_best/preds.jsonl --shard 0/12
+uv run python scripts/swebench_eval.py --predictions runs/verified/neat_best/preds.jsonl --out runs/verified/neat_best/eval.jsonl
+```
 
-`agent2/` is an attached library with its own git repository, installed as an editable path dependency. ACE uses its Session, Workspace, Agent, tools and code parser without modifying them. Commit changes to agent2 in that repository, not in this one. Its architecture is described in `agent2/CURRENT_SCHEMA.md`.
+`run_swe.py --mode baseline` is the naive single agent; `--mode graph` runs a worker graph. `swebench_eval.py` runs patches in the Apptainer sandbox (`slurm/swebench_eval.sbatch` wraps it as an array job).
 
-## Documentation
+## Analysis
 
-- `ACE_SCHEMA.md`: how ACE works, including known limitations.
-- `GRAPH_NEAT_DESIGN.md`: the binding interface contract for `ace.graph` and `ace.neat`.
+```
+uv run --group analysis python scripts/analyze.py --system baseline=runs/verified/baseline --system neat=runs/verified/neat_best --neat-runs runs/neat_a runs/neat_b --out results/analysis
+uv run --group analysis python scripts/report_stats.py
+uv run --group analysis python scripts/graph_analysis.py --runs runs/neat_a runs/neat_b --out results/graph_analysis
+```
+
+`analyze.py` needs the per-instance prediction and evaluation files; `report_stats.py` works from the committed JSON in `results/` alone.
+
+## Web UI
+
+```
+uv run python scripts/run_webui.py --runs-root runs --port 8766
+```
+
+Opens a browser view of every NEAT run directory under `--runs-root`: generations, species, lineages, per-task scores and rollouts. Live runs are picked up while they are written.
+
+## Data not in the repository
+
+Per-instance predictions, rollouts, evaluation logs, sandbox images, repository snapshots and NEAT histories are too large for git and stay on the cluster under `/usr/project/xtmp/kg349/ace/`. Everything derived from them that the report uses is under `results/`.

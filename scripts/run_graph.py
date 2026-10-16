@@ -55,7 +55,10 @@ def load_env_key(var: str) -> None:
 def load_graph(path: Path | None) -> WorkerGraph:
     if path is None:
         return minimal_graph()
-    return WorkerGraph.from_json(json.loads(path.read_text(encoding="utf-8")))
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(data, dict) and isinstance(data.get("graph"), dict):
+        data = data["graph"]  # a genome file (best_genome.json / results/graphs/*.json)
+    return WorkerGraph.from_json(data)
 
 
 def excerpt(text: str | None, limit: int = REPORT_EXCERPT) -> str:

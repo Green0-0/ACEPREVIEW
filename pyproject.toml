@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ace"
 version = "0.1.0"
-description = "ACE: evolvable worker-graph pipelines (NEAT) for file-viewing and editing agents, built on agent2"
+description = "ACE: discovering agentic coding pipelines with NEAT (evolved worker graphs evaluated on SWE-bench Verified)"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.12"
@@ -22,6 +22,8 @@ dependencies = [
 
 [dependency-groups]
 dev = ["pytest>=9.1.1"]
+# scripts/analyze.py, graph_analysis.py, report_stats*.py, swebench_select_candidates.py
+analysis = ["numpy", "scipy", "statsmodels", "pandas", "matplotlib", "datasets"]
 
 [tool.uv.sources]
 agent2 = { path = "agent2", editable = true }

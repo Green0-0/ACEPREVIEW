@@ -1,6 +1,6 @@
 # Results
 
-The outputs of the SWE-bench Verified experiment described in `../EXPERIMENT.md`. Per-instance predictions, rollouts, evaluation logs and NEAT histories are too large for git, so they stay under `/usr/project/xtmp/kg349/ace/runs/`.
+The outputs of the SWE-bench Verified experiment described in the top-level `README.md`. Per-instance predictions, rollouts, evaluation logs and NEAT histories are too large for git, so they stay under `/usr/project/xtmp/kg349/ace/runs/`.
 
 | Path | Contents |
 |---|---|
