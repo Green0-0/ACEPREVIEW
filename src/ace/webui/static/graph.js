@@ -96,7 +96,7 @@ function num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
  * renderGraph(layout, {onSelect(node), selected, nodeClass(node) → extra class, legend})
  * → {el, select(id)}
  */
-export function renderGraph(layout, { onSelect = null, selected = null, nodeClass = null, showLegend = true } = {}) {
+export function renderGraph(layout, { onSelect = null, selected = null, nodeClass = null, nodeBadge = null, showLegend = true } = {}) {
   const L = computeLayout(layout);
   const id = `g${++uid}`;
   if (!L.nodes.size) return { el: h('div', { class: 'state' }, 'Empty graph.'), select() {} };
@@ -146,6 +146,7 @@ export function renderGraph(layout, { onSelect = null, selected = null, nodeClas
         s('rect', { class: 'node-stripe', width: 6, height: n.h, rx: 3 }),
         s('text', { x: 16, y: 21, class: 'node-id', text: `#${n.id}` }),
         s('text', { x: 16, y: 39, class: 'node-type', text: n.type }),
+        nodeBadge && nodeBadge(n) ? s('text', { x: n.w - 8, y: 21, 'text-anchor': 'end', class: 'node-badge', text: String(nodeBadge(n)) }) : null,
         s('title', { text: `node ${n.id} (${n.type}) — level ${n.level ?? n.col}` }));
       if (onSelect) {
         const pick = () => { select(n.id); onSelect(n); };

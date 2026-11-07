@@ -5,6 +5,7 @@ import { lineChart, stackedArea, barChart, speciesColor, seriesColor } from './c
 import { renderGraph, typeChip, typeColor, kindColor, WORKER_TYPES } from './graph.js';
 import { renderDiff } from './diff.js';
 import { renderRollout } from './chat.js';
+import { viewDemoPage, viewDemo } from './demo.js';
 
 if (location.search.includes('mock=1')) await import('./dev-mock.js');
 
@@ -37,6 +38,8 @@ export const R = {
   failures: (run) => `#/run/${enc(run)}/failures`,
   compare: (run, a, b) => `#/run/${enc(run)}/compare${hashQuery({ a, b })}`,
   innovations: (run) => `#/run/${enc(run)}/innovations`,
+  demoPage: (run, gid, q) => `#/run/${enc(run)}/genome/${enc(gid)}/demo${hashQuery(q)}`,
+  demo: (id) => `#/demo/${enc(id)}`,
 };
 function hashQuery(q) {
   const parts = Object.entries(q || {}).filter(([, v]) => v !== null && v !== undefined && v !== '').map(([k, v]) => `${enc(k)}=${enc(String(v))}`);
@@ -50,6 +53,8 @@ const ROUTES = [
   [/^\/run\/([^/]+)\/species$/, viewSpecies],
   [/^\/run\/([^/]+)\/genomes$/, viewGenomes],
   [/^\/run\/([^/]+)\/genome\/([^/]+)$/, viewGenome],
+  [/^\/run\/([^/]+)\/genome\/([^/]+)\/demo$/, viewDemoPage],
+  [/^\/demo\/([^/]+)$/, viewDemo],
   [/^\/run\/([^/]+)\/eval\/([^/]+)\/([^/]+)$/, viewEvaluation],
   [/^\/run\/([^/]+)\/operators$/, viewOperators],
   [/^\/run\/([^/]+)\/failures$/, viewFailures],
@@ -100,7 +105,7 @@ async function route() {
 window.addEventListener('hashchange', route);
 
 // ---------- shared chrome ----------
-function crumbs(items) {
+export function crumbs(items) {
   const nav = h('nav', { class: 'crumbs', 'aria-label': 'Breadcrumb' });
   items.forEach(([label, href], i) => {
     if (i) nav.appendChild(h('span', { class: 'crumb-sep', 'aria-hidden': 'true' }, '›'));
@@ -117,7 +122,7 @@ const RUN_TABS = [
 const runMeta = new Map(); // run_id → run.json (cached for the header status badge)
 
 /** Breadcrumb + run sub-navigation shown on every run page. */
-function runHeader(runId, trail, active = null) {
+export function runHeader(runId, trail, active = null) {
   const status = h('span', { class: 'run-status' });
   const paint = (run) => replace(status, statusBadge(run.status));
   if (runMeta.has(runId)) paint(runMeta.get(runId));
@@ -133,13 +138,13 @@ function statusBadge(status) {
   return badge(status || 'unknown', status === 'finished' ? 'ok' : status === 'failed' ? 'danger' : '');
 }
 
-function card(title, body, { actions = null, cls = '' } = {}) {
+export function card(title, body, { actions = null, cls = '' } = {}) {
   return h('section', { class: `card ${cls}` },
     title ? h('div', { class: 'card-head' }, h('h3', null, title), actions) : null,
     h('div', { class: 'card-body' }, body));
 }
 
-function kv(rows) {
+export function kv(rows) {
   const dl = h('dl', { class: 'kv' });
   for (const [k, v, mono] of rows) {
     if (v === undefined) continue;
@@ -148,7 +153,7 @@ function kv(rows) {
   return dl;
 }
 
-function statTiles(items) {
+export function statTiles(items) {
   return h('div', { class: 'tiles' }, items.map(([label, value, sub]) => h('div', { class: 'tile' },
     h('div', { class: 'tile-label' }, label), h('div', { class: 'tile-value' }, value ?? '—'), sub ? h('div', { class: 'tile-sub' }, sub) : null)));
 }
@@ -158,7 +163,7 @@ function speciesChip(id) {
   return h('span', { class: 'species-chip', style: { '--c': speciesColor(id) }, title: `species ${id}` }, `S${id}`);
 }
 function opChip(op) { return h('span', { class: 'op-chip', title: `operator ${op}` }, op); }
-function genomeLink(run, gid, label = null) { return gid ? h('a', { class: 'mono', href: R.genome(run, gid), title: gid }, label || shortId(gid)) : h('span', { class: 'muted' }, '—'); }
+export function genomeLink(run, gid, label = null) { return gid ? h('a', { class: 'mono', href: R.genome(run, gid), title: gid }, label || shortId(gid)) : h('span', { class: 'muted' }, '—'); }
 function workerTypeChips(wt) {
   const entries = Object.entries(wt || {}).filter(([, n]) => n).sort((a, b) => WORKER_TYPES.indexOf(a[0]) - WORKER_TYPES.indexOf(b[0]));
   return h('span', { class: 'chip-list' }, entries.map(([t, n]) => typeChip(t, n)));
@@ -215,7 +220,7 @@ function sortableTable(columns, rows, { sortKey = null, sortDir = 'desc', onRow 
 
 // ---------- modal ----------
 let modalClose = null;
-function openModal(title, body) {
+export function openModal(title, body) {
   closeModal();
   const prev = document.activeElement;
   const dialog = h('div', { class: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': title, tabindex: '-1' },
@@ -229,7 +234,7 @@ function openModal(title, body) {
   modalClose = () => { document.removeEventListener('keydown', onKey); backdrop.remove(); modalClose = null; if (prev && prev.focus) prev.focus(); };
   return dialog;
 }
-function closeModal() { if (modalClose) modalClose(); }
+export function closeModal() { if (modalClose) modalClose(); }
 
 // =====================================================================================
 // Views
@@ -590,7 +595,8 @@ async function viewGenome(ctx, runId, gid) {
     runHeader(runId, [['Generation ' + (g.generation ?? '?'), g.generation !== undefined && g.generation !== null ? R.generation(runId, g.generation) : null], [`Genome ${shortId(gid)}`]], null),
     h('div', { class: 'page-title-row' }, h('h1', null, 'Genome ', h('span', { class: 'mono' }, gid)),
       h('span', { class: 'row' }, speciesChip(g.species_id),
-        h('a', { class: 'btn btn-sm', href: paths.dot(runId, gid), download: `${gid}.dot` }, 'Download DOT'))),
+        h('a', { class: 'btn btn-sm', href: paths.dot(runId, gid), download: `${gid}.dot` }, 'Download DOT'),
+        g.graph ? h('a', { class: 'btn btn-primary btn-sm', href: R.demoPage(runId, gid), title: 'Run this graph on the demo project with a prompt of your choice' }, 'Run demo →') : null)),
     statTiles([
       ['Fitness', fmtNum(g.fitness, 3), `adjusted ${fmtNum(g.adjusted_fitness, 3)}`],
       ['Workers', String(g.num_workers ?? dag.layout.nodes.size - 1), workerTypeChips(g.worker_types)],
@@ -612,7 +618,7 @@ async function viewGenome(ctx, runId, gid) {
 
 // ---------- #/run/{id}/eval/{gid}/{task} ----------
 const LEVEL_NAMES = { 1: 'COLLAPSED', 2: 'FULL' };
-function viewSummary(view) {
+export function viewSummary(view) {
   const files = (view && view.files) || {};
   const names = Object.keys(files);
   if (!names.length) return stateBlock('empty', 'Empty view.');
@@ -627,13 +633,16 @@ function viewSummary(view) {
     })));
 }
 
-function workerPanel(runId, gid, task, w, inputs, isFailedNode, idx) {
+export function workerPanel(runId, gid, task, w, inputs, isFailedNode, idx, src = null) {
+  // `src` overrides where the view and the rollouts come from (demo runs); the default is
+  // the recorded evaluation (run, genome, task).
+  const load = src || { view: () => api.workerView(runId, gid, task, w.node_id), rollout: (rid) => api.rollout(runId, gid, task, rid) };
   const viewBox = h('div', { class: 'view-box' }, stateBlock('loading', 'Loading view…'));
   let loaded = false;
   const loadView = async () => {
     if (loaded) return; loaded = true;
     try {
-      const res = await api.workerView(runId, gid, task, w.node_id);
+      const res = await load.view();
       if (!res.view && (res.rendered === null || res.rendered === undefined)) replace(viewBox, stateBlock('empty', 'This worker forwarded no view.'));
       else if (res.rendered !== null && res.rendered !== undefined) replace(viewBox, h('div', { class: 'muted small' }, 'Rendered through render_view against the task project.'), truncatedText(res.rendered, 8000, 'pre code-block'));
       else replace(viewBox, h('div', { class: 'muted small' }, 'Project directory unavailable — showing the view as JSON.'), viewSummary(res.view),
@@ -642,7 +651,7 @@ function workerPanel(runId, gid, task, w, inputs, isFailedNode, idx) {
   };
   const inp = inputs || {};
   const rolloutList = (w.rollout_ids || []).length ? h('ul', { class: 'rollout-list' }, w.rollout_ids.map(rid => h('li', null,
-    h('button', { class: 'link-btn mono', type: 'button', onClick: () => openRollout(runId, gid, task, rid, w) }, rid)))) : h('span', { class: 'muted' }, 'No rollouts (deterministic or skipped worker).');
+    h('button', { class: 'link-btn mono', type: 'button', onClick: () => openRollout(() => load.rollout(rid), rid, w) }, rid)))) : h('span', { class: 'muted' }, 'No rollouts (deterministic or skipped worker).');
   const vs = w.view_summary || {};
   const st = w.status || 'ok';
   const details = h('details', { class: `worker-panel status-${st} ${isFailedNode ? 'failed-node' : ''}`, open: isFailedNode || null },
@@ -673,10 +682,10 @@ function workerPanel(runId, gid, task, w, inputs, isFailedNode, idx) {
   return details;
 }
 
-async function openRollout(runId, gid, task, rid, w) {
+async function openRollout(loader, rid, w) {
   const body = h('div', null, stateBlock('loading', 'Loading rollout…'));
   openModal(`Rollout ${rid} · node #${w.node_id} (${w.type})`, body);
-  try { replace(body, renderRollout(await api.rollout(runId, gid, task, rid))); }
+  try { replace(body, renderRollout(await loader())); }
   catch (err) { replace(body, stateBlock('error', `Could not load rollout: ${err.message}`)); }
 }
 

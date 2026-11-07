@@ -14,8 +14,10 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse
+from pydantic import BaseModel
 
 from ace.webui import analysis
+from ace.webui.demo import DemoRejected, DemoRunner, DemoSettings, DemoUnavailable, default_project_dir
 from ace.webui.store import InvalidName, NotFound, Run, RunStore, check_name
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
@@ -46,12 +48,23 @@ def render_worker_view(project_dir: str | None, view_json: dict[str, Any] | None
             return None
 
 
-def create_app(runs_root: Path) -> FastAPI:
-    """Build the WebUI app over the run directories under ``runs_root``."""
+class DemoRequest(BaseModel):
+    prompt: str
+
+
+def create_app(runs_root: Path, demo: DemoSettings | None = None) -> FastAPI:
+    """Build the WebUI app over the run directories under ``runs_root``.
+
+    ``demo`` configures demo runs from genome pages (``/api/demo``); the default runs the
+    agent2 smoke repository with the default model, and ``DemoSettings(project_dir=None)``
+    leaves the demo endpoints answering 409.
+    """
     runs_root = Path(runs_root)
     store = RunStore(runs_root)
+    demos = DemoRunner(demo if demo is not None else DemoSettings(project_dir=default_project_dir()))
     app = FastAPI(title="ACE runs", version="0.1.0")
     app.state.store = store
+    app.state.demos = demos
 
     @app.exception_handler(NotFound)
     async def _not_found(_: Request, exc: NotFound) -> JSONResponse:
@@ -60,6 +73,14 @@ def create_app(runs_root: Path) -> FastAPI:
     @app.exception_handler(InvalidName)
     async def _invalid(_: Request, exc: InvalidName) -> JSONResponse:
         return JSONResponse(status_code=400, content={"detail": str(exc)})
+
+    @app.exception_handler(DemoUnavailable)
+    async def _demo_unavailable(_: Request, exc: DemoUnavailable) -> JSONResponse:
+        return JSONResponse(status_code=409, content={"detail": str(exc)})
+
+    @app.exception_handler(DemoRejected)
+    async def _demo_rejected(_: Request, exc: DemoRejected) -> JSONResponse:
+        return JSONResponse(status_code=422, content={"detail": str(exc)})
 
     def get_run(run_id: str) -> Run:
         return store.get(run_id)
@@ -232,12 +253,55 @@ def create_app(runs_root: Path) -> FastAPI:
     async def failures(run_id: str) -> list[dict[str, Any]]:
         return analysis.failures(get_run(run_id).evaluation_records())
 
+    # ------------------------------------------------------------------ demos
+    @app.get("/api/demo")
+    async def demo_info() -> dict[str, Any]:
+        return demos.info()
+
+    @app.post("/api/runs/{run_id}/genomes/{genome_id}/demo", status_code=202)
+    async def demo_start(run_id: str, genome_id: str, body: DemoRequest) -> dict[str, Any]:
+        run = get_run(run_id)
+        check_name(genome_id, "genome id")
+        graph = graph_or_404(run, run.genome(genome_id))
+        return demos.start(run.run_id, genome_id, graph, body.prompt).summary()
+
+    @app.get("/api/demos")
+    async def demo_list(run: str | None = None, genome: str | None = None) -> list[dict[str, Any]]:
+        return demos.list(run_id=run, genome_id=genome)
+
+    @app.get("/api/demos/{demo_id}")
+    async def demo_detail(demo_id: str) -> dict[str, Any]:
+        return demos.get(demo_id).to_json()
+
+    @app.delete("/api/demos/{demo_id}")
+    async def demo_cancel(demo_id: str) -> dict[str, Any]:
+        return demos.cancel(demo_id).summary()
+
+    @app.get("/api/demos/{demo_id}/rollouts/{rollout_id}")
+    async def demo_rollout(demo_id: str, rollout_id: str) -> Any:
+        path = demos.get(demo_id).rollout_path(rollout_id)
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise HTTPException(422, detail=f"rollout {rollout_id!r} is not readable JSON: {exc}") from exc
+
+    @app.get("/api/demos/{demo_id}/workers/{node_id}/rollouts")
+    async def demo_worker_rollouts(demo_id: str, node_id: int) -> list[dict[str, Any]]:
+        """The worker's transcripts so far, read fresh from its rollout files (live while running)."""
+        return demos.get(demo_id).worker_rollouts(node_id)
+
+    @app.get("/api/demos/{demo_id}/workers/{node_id}/view")
+    def demo_worker_view(demo_id: str, node_id: int) -> dict[str, Any]:
+        demo = demos.get(demo_id)
+        view = demo.recorded_worker(node_id).get("view")
+        return {"view": view, "rendered": render_worker_view(str(demo.project_dir), view)}
+
     # ---------------------------------------------------------------- static
     @app.get("/", include_in_schema=False)
     async def index() -> HTMLResponse:
         index_file = STATIC_DIR / "index.html"
         if index_file.is_file():
-            return HTMLResponse(index_file.read_text(encoding="utf-8"))
+            return HTMLResponse(index_file.read_text(encoding="utf-8"), headers={"Cache-Control": "no-cache"})
         return HTMLResponse(PLACEHOLDER)
 
     @app.get("/static/{asset_path:path}", include_in_schema=False)
@@ -247,7 +311,8 @@ def create_app(runs_root: Path) -> FastAPI:
         candidate = (root / asset_path).resolve()
         if not candidate.is_relative_to(root) or not candidate.is_file():
             raise HTTPException(404, detail=f"{asset_path!r} not found")
-        return FileResponse(candidate)
+        # Revalidate on every load so an updated module is never served from the browser cache.
+        return FileResponse(candidate, headers={"Cache-Control": "no-cache"})
 
     return app
 

@@ -22,18 +22,26 @@ function detailText(detail) {
  * get(path, {silent, text}) → parsed JSON (or text when `text`). Throws ApiError and shows an
  * error toast unless `silent`.
  */
-export async function get(path, { silent = false, text = false } = {}) {
+export async function get(path, opts = {}) { return request('GET', path, opts); }
+
+/** post(path, body) / del(path): JSON requests with the same error handling as get(). */
+export async function post(path, body, opts = {}) { return request('POST', path, { ...opts, body }); }
+export async function del(path, opts = {}) { return request('DELETE', path, opts); }
+
+export async function request(method, path, { silent = false, text = false, body = undefined } = {}) {
   let res;
   try {
-    res = await fetch(path, { headers: { Accept: text ? 'text/plain' : 'application/json' } });
+    const init = { method, headers: { Accept: text ? 'text/plain' : 'application/json' } };
+    if (body !== undefined) { init.headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(body); }
+    res = await fetch(path, init);
   } catch (err) {
     const e = new ApiError(0, `Network error: ${err.message || err}`);
     if (!silent) toast(e.message, 'error');
     throw e;
   }
-  const body = await res.text();
-  let data = body;
-  if (!text && body) { try { data = JSON.parse(body); } catch { data = body; } }
+  const payload = await res.text();
+  let data = payload;
+  if (!text && payload) { try { data = JSON.parse(payload); } catch { data = payload; } }
   if (!res.ok) {
     const detail = data && typeof data === 'object' && 'detail' in data ? data.detail : (data || `${res.status} ${res.statusText}`);
     const e = new ApiError(res.status, detail, data);
@@ -74,6 +82,13 @@ export const paths = {
   compare: (run, a, b) => `/api/runs/${enc(run)}/compare${qs({ a, b })}`,
   innovations: (run) => `/api/runs/${enc(run)}/innovations`,
   failures: (run) => `/api/runs/${enc(run)}/failures`,
+  demoInfo: () => `/api/demo`,
+  demoStart: (run, id) => `/api/runs/${enc(run)}/genomes/${enc(id)}/demo`,
+  demos: (params) => `/api/demos${qs(params)}`,
+  demo: (id) => `/api/demos/${enc(id)}`,
+  demoRollout: (id, rollout) => `/api/demos/${enc(id)}/rollouts/${enc(rollout)}`,
+  demoWorkerRollouts: (id, node) => `/api/demos/${enc(id)}/workers/${enc(node)}/rollouts`,
+  demoWorkerView: (id, node) => `/api/demos/${enc(id)}/workers/${enc(node)}/view`,
 };
 
 export const api = {
@@ -93,4 +108,12 @@ export const api = {
   compare: (run, a, b) => get(paths.compare(run, a, b)),
   innovations: (run) => get(paths.innovations(run)),
   failures: (run) => get(paths.failures(run)),
+  demoInfo: (opts) => get(paths.demoInfo(), opts),
+  demoStart: (run, id, prompt) => post(paths.demoStart(run, id), { prompt }),
+  demos: (params, opts) => get(paths.demos(params), opts),
+  demo: (id, opts) => get(paths.demo(id), opts),
+  demoCancel: (id) => del(paths.demo(id)),
+  demoRollout: (id, rollout) => get(paths.demoRollout(id, rollout)),
+  demoWorkerRollouts: (id, node, opts) => get(paths.demoWorkerRollouts(id, node), opts),
+  demoWorkerView: (id, node) => get(paths.demoWorkerView(id, node)),
 };

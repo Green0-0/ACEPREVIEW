@@ -50,6 +50,7 @@ Choices made where the contract is open:
 from __future__ import annotations
 
 import asyncio
+import logging
 from dataclasses import InitVar, dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable
@@ -61,6 +62,8 @@ from ace.graph.graph import WorkerEdge, WorkerGraph, WorkerNode
 from ace.graph.llm import ModelSettings
 from ace.graph.types import END, GraphFailure, Kind, WorkerType
 from ace.graph.views import View
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from agent2.core.session import Session
@@ -94,6 +97,10 @@ class RunContext:
     codegraph: InitVar[CodebaseGraph | None] = None
     run_id: str = field(default_factory=lambda: uuid4().hex)
     rollout_dir: Path | None = None
+    observer: Callable[[str, int, Any], None] | None = None
+    """Optional ``observer(event, node_id, payload)`` called from each worker's own task:
+    ``("start", id, None)`` before the worker runs, then ``("done", id, WorkerOutputs)`` or
+    ``("failed", id, exception)``. Exceptions raised by the observer are ignored."""
 
     def __post_init__(self, codegraph: CodebaseGraph | None) -> None:
         self._codegraph = codegraph
@@ -146,6 +153,17 @@ class GraphResult:
     outputs: dict[int, WorkerOutputs]
     order: list[int]
     timings: dict[int, tuple[str, str]] = field(default_factory=dict)
+
+
+def _notify(ctx: RunContext, event: str, node_id: int, payload: Any) -> None:
+    """Call ``ctx.observer`` if set; an observer must never break a run."""
+    observer = getattr(ctx, "observer", None)
+    if observer is None:
+        return
+    try:
+        observer(event, node_id, payload)
+    except Exception:  # noqa: BLE001
+        logger.exception("graph observer raised on %s of node %s", event, node_id)
 
 
 _PAYLOAD_ATTR: dict[Kind, str] = {Kind.VIEW: "view", Kind.EDIT: "edit", Kind.REPORT: "report"}
@@ -221,8 +239,15 @@ class GraphRunner:
         started = utc_now()
         if timings is not None:
             timings[node.id] = (started, started)
+        _notify(ctx, "start", node.id, None)
         try:
-            return await self._run_node_inner(ctx, node, inputs, registry)
+            result = await self._run_node_inner(ctx, node, inputs, registry)
+        except BaseException as exc:
+            _notify(ctx, "failed", node.id, exc)
+            raise
+        else:
+            _notify(ctx, "done", node.id, result)
+            return result
         finally:
             if timings is not None:
                 timings[node.id] = (started, utc_now())

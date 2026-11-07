@@ -37,6 +37,14 @@ SPEC_PATHS = {
     "/api/runs/{}/innovations",
     "/api/runs/{}/failures",
     "/api/health",
+    # demo runs (genome page)
+    "/api/demo",
+    "/api/runs/{}/genomes/{}/demo",
+    "/api/demos",
+    "/api/demos/{}",
+    "/api/demos/{}/rollouts/{}",
+    "/api/demos/{}/workers/{}/rollouts",
+    "/api/demos/{}/workers/{}/view",
 }
 
 

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+from pathlib import Path
 from dataclasses import dataclass
 from types import SimpleNamespace
 from typing import Any, Awaitable, Callable
@@ -31,6 +32,27 @@ class ModelSettings:
     model: str
     api_base_url: str | None = None
     api_key_env_var: str | None = "ANTHROPIC_API_KEY"
+
+
+def load_env_key(var: str, *roots: Path) -> bool:
+    """Set ``var`` from the first git-ignored ``.env`` under ``roots`` that defines it.
+
+    An already-set variable is left alone. Returns whether the variable is set afterwards.
+    """
+    if os.environ.get(var):
+        return True
+    for root in roots:
+        env_path = Path(root) / ".env"
+        if not env_path.is_file():
+            continue
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            key, separator, value = line.partition("=")
+            if separator and key.removeprefix("export ").strip() == var:
+                value = value.strip().strip("'\"")
+                if value:
+                    os.environ[var] = value
+                    return True
+    return False
 
 
 def is_retryable(exc: BaseException) -> bool:

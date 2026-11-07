@@ -25,6 +25,7 @@ from pathlib import Path
 from agent2.core.session import Session
 from ace.graph.graph import WorkerGraph, minimal_graph
 from ace.graph.llm import ModelSettings, make_client_factory
+from ace.graph.llm import load_env_key as _load_env_key
 from ace.graph.rendering import measure, render_view
 from ace.graph.runner import GraphResult, GraphRunner, RunContext
 from ace.graph.types import GraphFailure, InvalidGraph
@@ -35,21 +36,9 @@ REPORT_EXCERPT = 300
 
 
 def load_env_key(var: str) -> None:
-    """Load ``var`` from a git-ignored ``.env`` when it is not already set.
-
-    Looks in the ACE project root first, then in the attached ``agent2/`` library folder.
-    """
-    if var in os.environ:
-        return
+    """Load ``var`` from ``.env`` in the ACE root or the attached ``agent2/`` folder."""
     root = Path(__file__).resolve().parents[1]
-    for env_path in (root / ".env", root / "agent2" / ".env"):
-        if not env_path.is_file():
-            continue
-        for line in env_path.read_text(encoding="utf-8").splitlines():
-            key, separator, value = line.partition("=")
-            if separator and key.removeprefix("export ").strip() == var:
-                os.environ[var] = value.strip().strip("'\"")
-                return
+    _load_env_key(var, root, root / "agent2")
 
 
 def load_graph(path: Path | None) -> WorkerGraph:
