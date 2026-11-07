@@ -263,6 +263,26 @@ def test_rollout(client):
     assert client.get("/api/runs/run-a/rollouts/nope/0/r1").status_code == 404
 
 
+def test_rollout_in_batch_named_directory(runs):
+    """SWE minibatch runs store rollouts under ``<genome>/b<batch>_<instance_id>/`` and record
+    that (foreign, absolute) path per worker; the store resolves it from the basename."""
+    from conftest import evaluation, worker
+    from ace.webui.app import create_app
+    from fastapi.testclient import TestClient
+
+    run = runs["root"] / "run-a"
+    foreign = "/cluster/xtmp/runs/run-a/rollouts/g2a/b3_some-org__repo-12"
+    append_jsonl(run / "evaluations.jsonl", evaluation(
+        "g2a", 2, 1, str(runs["project"]), score=0.5,
+        workers=[{**worker(0, "editor", "ok", rollout_dir=foreign), "rollout_ids": ["r9"]}]))
+    (run / "rollouts" / "g2a" / "b3_some-org__repo-12").mkdir(parents=True)
+    (run / "rollouts" / "g2a" / "b3_some-org__repo-12" / "r9.json").write_text('{"id": "r9", "raw_chat": []}', encoding="utf-8")
+    client = TestClient(create_app(runs["root"]))
+    assert client.get("/api/runs/run-a/rollouts/g2a/1/r9").json()["id"] == "r9"
+    assert client.get("/api/runs/run-a/rollouts/g2a/0/r9").status_code == 404
+    assert client.get("/api/runs/run-a/rollouts/g2a/0/r1").status_code == 200
+
+
 @pytest.mark.parametrize(
     "path",
     [

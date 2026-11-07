@@ -307,10 +307,36 @@ class Run:
         check_name(rollout_id, "rollout id")
         name = rollout_id if rollout_id.endswith(".json") else f"{rollout_id}.json"
         root = (self.directory / ROLLOUTS_DIR).resolve()
-        path = (root / genome_id / str(int(task_index)) / name).resolve()
-        if not path.is_relative_to(root) or not path.is_file():
-            raise NotFound(f"rollout {rollout_id!r} not found for genome {genome_id!r} task {task_index}")
-        return path
+        for task_dir in self._rollout_task_dirs(genome_id, int(task_index)):
+            path = (root / genome_id / task_dir / name).resolve()
+            if path.is_relative_to(root) and path.is_file():
+                return path
+        raise NotFound(f"rollout {rollout_id!r} not found for genome {genome_id!r} task {task_index}")
+
+    def _rollout_task_dirs(self, genome_id: str, task_index: int) -> list[str]:
+        """Directory names a task's rollouts may live under, inside the genome's folder.
+
+        Generic evaluators write ``<genome>/<task_index>/``; the SWE minibatch evaluator
+        writes ``<genome>/b<batch>_<instance_id>/`` and records that path per worker as
+        ``rollout_dir``, so the basenames of those (possibly absolute, possibly from
+        another machine) paths are tried as well.
+        """
+        names = [str(task_index)]
+        index = self.index()
+        records = [r for r in index.evaluations_by_genome.get(genome_id, [])
+                   if r.get("task_index") == task_index]
+        for worker in (w for r in records for w in r.get("workers") or []):
+            rollout_dir = worker.get("rollout_dir") if isinstance(worker, dict) else None
+            if not isinstance(rollout_dir, str) or not rollout_dir:
+                continue
+            base = Path(rollout_dir).name
+            try:
+                check_name(base, "rollout directory")
+            except InvalidName:
+                continue
+            if base not in names:
+                names.append(base)
+        return names
 
     # -- status -----------------------------------------------------------------------
 

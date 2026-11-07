@@ -1,0 +1,61 @@
+{
+  "run_id": "neat_b",
+  "ace_version": "0.1.0",
+  "status": "finished",
+  "started_at": "2026-10-15T18:37:10.591167+00:00",
+  "finished_at": "2026-10-16T10:50:27.177607+00:00",
+  "duration_s": 58396.58644,
+  "resumed_from": "/usr/project/xtmp/kg349/ace/runs/neat_b/population_state.json",
+  "seed": 1,
+  "config": {
+    "population_size": 12,
+    "generations": 30,
+    "node_cost": 0.01,
+    "crossover_rate": 0.5,
+    "initial_min_workers": 1,
+    "initial_max_workers": 4,
+    "max_workers": 8,
+    "seed": 1,
+    "speciation": {
+      "enabled": true,
+      "target_species": 3,
+      "c_excess": 1.0,
+      "c_disjoint": 1.0,
+      "c_properties": 0.5,
+      "initial_threshold": 3.0,
+      "threshold_step": 0.15,
+      "stagnation_generations": 6,
+      "elitism_per_species": 1,
+      "survival_fraction": 0.4
+    },
+    "mutation": {
+      "p_property": 0.8,
+      "p_property_per_gene": 0.1,
+      "p_add_connection": 0.3,
+      "p_add_worker": 0.15,
+      "p_insert_merger": 0.05,
+      "p_remove_connection": 0.05,
+      "p_remove_worker": 0.05,
+      "p_toggle_enable": 0.02,
+      "max_attempts": 20
+    },
+    "history_dir": "/usr/project/xtmp/kg349/ace/runs/neat_b"
+  },
+  "model": {
+    "model": "gemma4-26b",
+    "api_base_url": null,
+    "api_key_env_var": null
+  },
+  "evaluator": {
+    "type": "swe_minibatch",
+    "pool_size": 894,
+    "batch_size": 8,
+    "seed": 1,
+    "fixed": false,
+    "tasks": []
+  },
+  "generations_completed": 30,
+  "best_genome_id": "82da80d220e042fdbe793517434133f8",
+  "best_fitness": 0.5228203727400483,
+  "error": null
+}

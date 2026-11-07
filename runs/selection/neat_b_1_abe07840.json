@@ -1,0 +1,226 @@
+{
+  "id": "abe0784018d84109b723343c70cc794e",
+  "generation": 1,
+  "parents": [
+    "03ea564d762841af82f531ebc6982105",
+    "0ee09fdbdcda4eaebcf51876bba854a9"
+  ],
+  "operators": [
+    "crossover",
+    "mutate_properties",
+    "toggle_enable"
+  ],
+  "fitness": 0.5159855288269154,
+  "adjusted_fitness": 0.48598552882691537,
+  "species_id": 0,
+  "created_at": "2026-10-15T15:32:47.934480+00:00",
+  "evaluated_at": "2026-10-15T15:39:19.291285+00:00",
+  "eval_duration_s": 391.355246,
+  "task_scores": [
+    0.5702511773940345,
+    0.5416666666666666,
+    0.5285714285714286,
+    0.0,
+    0.5,
+    0.5,
+    0.5588235294117647,
+    0.9285714285714286
+  ],
+  "fitness_history": [],
+  "nodes": [
+    {
+      "innovation": 0,
+      "type": "editor",
+      "properties": {
+        "context_budget": 0,
+        "instruction": 0,
+        "max_steps": 1,
+        "report_focus": 0,
+        "role": 2,
+        "strategy": 0,
+        "tool_set": 0
+      }
+    },
+    {
+      "innovation": 2,
+      "type": "editor",
+      "properties": {
+        "context_budget": 1,
+        "instruction": 1,
+        "max_steps": 0,
+        "report_focus": 0,
+        "role": 2,
+        "strategy": 2,
+        "tool_set": 3
+      }
+    },
+    {
+      "innovation": 19,
+      "type": "pickmerger",
+      "properties": {
+        "ace_format": 3,
+        "context_budget": 3,
+        "instruction": 2,
+        "role": 2,
+        "strategy": 3,
+        "view_full_weight": 0
+      }
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 1,
+      "src": 0,
+      "dst": "END",
+      "kind": "edit",
+      "enabled": false
+    },
+    {
+      "innovation": 3,
+      "src": 0,
+      "dst": 2,
+      "kind": "view",
+      "enabled": false
+    },
+    {
+      "innovation": 4,
+      "src": 0,
+      "dst": 2,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 20,
+      "src": 0,
+      "dst": 19,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 21,
+      "src": 2,
+      "dst": 19,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 22,
+      "src": 19,
+      "dst": "END",
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 23,
+      "src": 0,
+      "dst": 19,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 24,
+      "src": 2,
+      "dst": 19,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 25,
+      "src": 0,
+      "dst": 19,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 26,
+      "src": 2,
+      "dst": 19,
+      "kind": "report",
+      "enabled": true
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": 0,
+        "type": "editor",
+        "properties": {
+          "context_budget": 0,
+          "instruction": 0,
+          "max_steps": 1,
+          "report_focus": 0,
+          "role": 2,
+          "strategy": 0,
+          "tool_set": 0
+        }
+      },
+      {
+        "id": 2,
+        "type": "editor",
+        "properties": {
+          "context_budget": 1,
+          "instruction": 1,
+          "max_steps": 0,
+          "report_focus": 0,
+          "role": 2,
+          "strategy": 2,
+          "tool_set": 3
+        }
+      },
+      {
+        "id": 19,
+        "type": "pickmerger",
+        "properties": {
+          "ace_format": 3,
+          "context_budget": 3,
+          "instruction": 2,
+          "role": 2,
+          "strategy": 3,
+          "view_full_weight": 0
+        }
+      }
+    ],
+    "edges": [
+      {
+        "src": 0,
+        "dst": 2,
+        "kind": "report"
+      },
+      {
+        "src": 0,
+        "dst": 19,
+        "kind": "edit"
+      },
+      {
+        "src": 2,
+        "dst": 19,
+        "kind": "edit"
+      },
+      {
+        "src": 19,
+        "dst": "END",
+        "kind": "edit"
+      },
+      {
+        "src": 0,
+        "dst": 19,
+        "kind": "view"
+      },
+      {
+        "src": 2,
+        "dst": 19,
+        "kind": "view"
+      },
+      {
+        "src": 0,
+        "dst": 19,
+        "kind": "report"
+      },
+      {
+        "src": 2,
+        "dst": 19,
+        "kind": "report"
+      }
+    ]
+  }
+}

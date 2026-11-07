@@ -1,0 +1,16 @@
+{
+  "config": "configs/neat_swe_b.toml",
+  "pool": "/usr/project/xtmp/kg349/ace/data/train_pool.jsonl",
+  "history_dir": "/usr/project/xtmp/kg349/ace/runs/neat_b",
+  "batch_size": 8,
+  "generations": null,
+  "seed": null,
+  "model": "gemma4-26b",
+  "endpoints_dir": "/usr/project/xtmp/kg349/ace/endpoints",
+  "max_tokens": 4096,
+  "concurrency": 32,
+  "per_endpoint_cap": 3,
+  "cap_key": "neat",
+  "resume": "/usr/project/xtmp/kg349/ace/runs/neat_b/population_state.json",
+  "verbose": false
+}

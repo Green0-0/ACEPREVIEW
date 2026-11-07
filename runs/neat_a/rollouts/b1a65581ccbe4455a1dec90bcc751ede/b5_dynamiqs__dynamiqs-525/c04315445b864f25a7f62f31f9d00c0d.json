@@ -1,0 +1,102 @@
+{
+  "config_path": "graph/viewer/17",
+  "id": "c04315445b864f25a7f62f31f9d00c0d",
+  "date_deployed": "2026-10-15T13:59:12.188252",
+  "parent": null,
+  "children": [],
+  "raw_chat": [
+    {
+      "role": "system",
+      "content": "You are a senior engineer doing reconnaissance before a change. Your job is to map the part of the codebase a task touches: where the behaviour lives, who calls it, and what would break if it changed. You read; you never edit.\n\n# Approach: breadth-first by directory\nFirst survey the layout: list the top-level folders and read overviews of the files whose names relate to the task. Narrow down one directory level at a time, and only read full elements once you know which module owns the behaviour.\n\n# Report contents\nList the files and elements (`path::Element.path`) that are relevant to the task, each with one line on why. Then explain where the change most likely belongs.\n\n# Output format\nUse your tools to explore. When you have finished, reply WITHOUT calling any tool. That\nfinal message is your report and is the only text passed on to later workers, so it must\nstand on its own: name files and elements as `path::Element.path`, and do not refer to\n\"above\" or to tool output the reader cannot see. Do not propose a full patch.\n\nThe directory structure is:\nCONTRIBUTING.md\nLICENSE\nREADME.md\ndocs/CNAME\ndocs/conftest.py\ndocs/generate_python_api.py\ndocs/getting_started/citing.md\ndocs/getting_started/contributing.md\ndocs/getting_started/examples.md\ndocs/getting_started/index.md\ndocs/getting_started/installation.md\ndocs/getting_started/lets-talk.md\ndocs/getting_started/sharp-bits.md\ndocs/getting_started/whatis.md\ndocs/hooks.py\ndocs/index.md\ndocs/javascripts/katex.js\ndocs/media/dynamiqs-logo-large.png\ndocs/media/dynamiqs-logo.png\ndocs/media/favicon.png\ndocs/media/favicon.svg\ndocs/media/logo-dark-large.png\ndocs/media/logo-dark.png\ndocs/media/logo-inverted-large.png\ndocs/media/logo-inverted.png\ndocs/media/logo-large.png\ndocs/media/logo-white-large.png\ndocs/media/logo-white.png\ndocs/media/logo.png\ndocs/overrides/home.html\ndocs/overrides/main.html\ndocs/overrides/partials/content.html\ndocs/overrides/partials/header.html\ndocs/python_api/index.md\ndocs/stylesheets/extra.css\ndocs/stylesheets/home.css\ndocs/stylesheets/theme.css\ndocs/templates/python/material/attribute.html\ndocs/templates/python/material/class.html\ndocs/templates/python/material/docstring/admonition.html\ndocs/templates/python/material/docstring/attributes.html\ndocs/templates/python/material/docstring/examples.html\ndocs/templates/python/material/docstring/functions.html\ndocs/templates/python/material/docstring/parameters.html\ndocs/templates/python/material/docstring/raises.html\ndocs/templates/python/material/docstring/returns.html\ndocs/templates/python/material/function.html\ndocs/templates/python/material/labels.html\ndocs/templates/python/material/module.html\ndocs/templates/python/material/table.html\ndocs/tutorials/batching-simulations.md\ndocs/tutorials/closed-system.md\ndocs/tutorials/computing-gradients.md\ndocs/tutorials/index.md\ndocs/tutorials/open-system.md\ndocs/tutorials/time-dependent-operators.md\ndocs/tutorials/workflow.md\ndynamiqs/__init__.py\ndynamiqs/_utils.py\ndynamiqs/conftest.py\ndynamiqs/core/__init__.py\ndynamiqs/core/_utils.py\ndynamiqs/core/abstract_solver.py\ndynamiqs/core/diffrax_solver.py\ndynamiqs/core/propagator_solver.py\ndynamiqs/dark/__init__.py\ndynamiqs/dark/dark.py\ndynamiqs/gradient.py\ndynamiqs/mesolve/__init__.py\ndynamiqs/mesolve/mediffrax.py\ndynamiqs/mesolve/mepropagator.py\ndynamiqs/mesolve/mesolve.py\ndynamiqs/options.py\ndynamiqs/plots/__init__.py\ndynamiqs/plots/colormaps.py\ndynamiqs/plots/plots_fock.py\ndynamiqs/plots/plots_hinton.py\ndynamiqs/plots/plots_misc.py\ndynamiqs/plots/plots_wigner.py\ndynamiqs/plots/utils.py\ndynamiqs/result.py\ndynamiqs/sesolve/__init__.py\ndynamiqs/sesolve/sediffrax.py\ndynamiqs/sesolve/sepropagator.py\ndynamiqs/sesolve/sesolve.py\ndynamiqs/smesolve/__init__.py\ndynamiqs/smesolve/smesolve.py\ndynamiqs/solver.py\ndynamiqs/solvers.py\ndynamiqs/time_array.py\ndynamiqs/utils/__init__.py\ndynamiqs/utils/jax_utils.py\ndynamiqs/utils/operators.py\ndynamiqs/utils/optimal_control.py\ndynamiqs/utils/random.py\ndynamiqs/utils/states.py\ndynamiqs/utils/utils/__init__.py\ndynamiqs/utils/utils/general.py\ndynamiqs/utils/utils/wigner.py\ndynamiqs/utils/vectorization.py\nincludes/glossary.md\nmkdocs.yml\npyproject.toml\npytest.ini\ntests/README.md\ntests/__init__.py\ntests/conftest.py\ntests/mesolve/__init__.py\ntests/mesolve/open_system.py\ntests/mesolve/test_adaptive.py\ntests/mesolve/test_batching.py\ntests/mesolve/test_euler.py\ntests/mesolve/test_propagator.py\ntests/sesolve/__init__.py\ntests/sesolve/closed_system.py\ntests/sesolve/test_adaptive.py\ntests/sesolve/test_batching.py\ntests/sesolve/test_euler.py\ntests/sesolve/test_propagator.py\ntests/solver_tester.py\ntests/system.py\ntests/test_plots.py\ntests/test_time_array.py\ntests/utils/__init__.py\ntests/utils/test_utils.py"
+    },
+    {
+      "role": "user",
+      "content": "Investigate the repository for the task below. Do not change anything; report what you find.\n\n# Task\nResolve the following GitHub issue in this repository by editing the source code. Do not modify or add tests.\n\n<issue>\nFix imageio \"fps\" deprecation warning.\nIn older versions, the `fps` keyword is deprecated, which raises a bug when running `dq.plot_wigner_gif`.\r\n\r\nCloses https://linear.app/dynamiqs/issue/DYN-175/fix-fps-warning-when-running-tests.\n</issue>"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-bcbf5f1f4f231755",
+          "function": {
+            "arguments": "{\"regex\": \"plot_wigner_gif\"}",
+            "name": "search"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-bcbf5f1f4f231755",
+      "name": "search",
+      "content": "# Showing ranked results 1-5 of 5\n## File dynamiqs/plots/plots_wigner.py:\n### 1. Element `plot_wigner_gif`, lines 235-349 (6 matches)\nr\"\"\"Plot a GIF of the Wigner function of multiple states.\nWarning:\nDocumentation redaction in progress.\nWarning:\nThis function creates files in the current working directory under\n`.tmp/dynamiqs`.\nNote:\nBy default, the GIF is displayed in Jupyter notebook environments.\nSee [`dq.plot_wigner()`][dynamiqs.plot_wigner] for more details.\nExamples:\n>>> n = 16\n>>> a = dq.destroy(n)\n>>> H = dq.zero(n)\n>>> jump_ops = [a @ a - 4.0 * dq.eye(n)]  # cat state inflation\n>>> psi0 = dq.coherent(n, 0)\n>>> tsave = np.linspace(0, 1.0, 1001)\n>>> result = dq.mesolve(H, jump_ops, psi0, tsave)\n>>> dq.plot_wigner_gif(\n...     result.states,\n...     fps=25,  # 25 frames per second\n\n## File docs/python_api/index.md:\n### 2. Element `<file>`, lines 1-118 (1 matches)\n113 - plot_wigner_gif\n\n## File dynamiqs/plots/__init__.py:\n### 3. Element `<file>`, lines 1-18 (1 matches)\n12 'plot_wigner_gif',\n\n## File dynamiqs/plots/plots_wigner.py:\n### 4. Element `<file>`, lines 1-349 (1 matches)\n19 __all__ = ['plot_wigner', 'plot_wigner_mosaic', 'plot_wigner_gif']\n\n## File mkdocs.yml:\n### 5. Element `<file>`, lines 1-245 (1 matches)\n240 - plot_wigner_gif: python_api/plots/plot_wigner_gif.md"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-814a240b08478740",
+          "function": {
+            "arguments": "{\"paths\": \"dynamiqs/plots/plots_wigner.py::plot_wigner_gif\"}",
+            "name": "view"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-814a240b08478740",
+      "name": "view",
+      "content": "--- dynamiqs/plots/plots_wigner.py::plot_wigner_gif ---\ndef plot_wigner_gif(\n    states: ArrayLike,\n    *,\n    gif_duration: float = 5.0,\n    fps: int = 10,\n    w: float = 5.0,\n    h: float | None = None,\n    xmax: float = 5.0,\n    ymax: float | None = None,\n    vmax: float = 2 / jnp.pi,\n    npixels: int = 101,\n    cmap: str = 'dq',\n    interpolation: str = 'bilinear',\n    cross: bool = False,\n    clear: bool = False,\n    filename: str = '.tmp/dynamiqs/wigner.gif',\n    dpi: int = 72,\n    display: bool = True,\n):\n    r\"\"\"Plot a GIF of the Wigner function of multiple states.\n\n    Warning:\n        Documentation redaction in progress.\n\n    Warning:\n        This function creates files in the current working directory under\n        `.tmp/dynamiqs`.\n\n    Note:\n        By default, the GIF is displayed in Jupyter notebook environments.\n\n    See [`dq.plot_wigner()`][dynamiqs.plot_wigner] for more details.\n\n    Examples:\n        >>> n = 16\n        >>> a = dq.destroy(n)\n        >>> H = dq.zero(n)\n        >>> jump_ops = [a @ a - 4.0 * dq.eye(n)]  # cat state inflation\n        >>> psi0 = dq.coherent(n, 0)\n        >>> tsave = np.linspace(0, 1.0, 1001)\n        >>> result = dq.mesolve(H, jump_ops, psi0, tsave)\n        >>> dq.plot_wigner_gif(\n        ...     result.states,\n        ...     fps=25,  # 25 frames per second\n        ...     xmax=4.0,\n        ...     ymax=2.0,\n        ...     filename='docs/figs-code/wigner-cat.gif',\n        ...     dpi=150,\n        ...     display=False,\n        ... )\n\n... (truncated)"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-95710de3e59311b9",
+          "function": {
+            "arguments": "{\"file_path\": \"dynamiqs/plots/plots_wigner.py\", \"line_end\": 349, \"line_start\": 235}",
+            "name": "view_lines"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-95710de3e59311b9",
+      "name": "view_lines",
+      "content": "--- dynamiqs/plots/plots_wigner.py (lines 235-349) ---\ndef plot_wigner_gif(\n    states: ArrayLike,\n    *,\n    gif_duration: float = 5.0,\n    fps: int = 10,\n    w: float = 5.0,\n    h: float | None = None,\n    xmax: float = 5.0,\n    ymax: float | None = None,\n    vmax: float = 2 / jnp.pi,\n    npixels: int = 101,\n    cmap: str = 'dq',\n    interpolation: str = 'bilinear',\n    cross: bool = False,\n    clear: bool = False,\n    filename: str = '.tmp/dynamiqs/wigner.gif',\n    dpi: int = 72,\n    display: bool = True,\n):\n    r\"\"\"Plot a GIF of the Wigner function of multiple states.\n\n    Warning:\n        Documentation redaction in progress.\n\n    Warning:\n        This function creates files in the current working directory under\n        `.tmp/dynamiqs`.\n\n    Note:\n        By default, the GIF is displayed in Jupyter notebook environments.\n\n    See [`dq.plot_wigner()`][dynamiqs.plot_wigner] for more details.\n\n    Examples:\n        >>> n = 16\n        >>> a = dq.destroy(n)\n        >>> H = dq.zero(n)\n        >>> jump_ops = [a @ a - 4.0 * dq.eye(n)]  # cat state inflation\n        >>> psi0 = dq.coherent(n, 0)\n        >>> tsave = np.linspace(0, 1.0, 1001)\n        >>> result = dq.mesolve(H, jump_ops, psi0, tsave)\n        >>> dq.plot_wigner_gif(\n        ...     result.states,\n        ...     fps=25,  # 25 frames per second\n        ...     xmax=4.0,\n        ...     ymax=2.0,\n        ...     filename='docs/figs-code/wigner-cat.gif',\n        ...     dpi=150,\n        ...     display=False,\n        ... )\n\n        ![plot_wigner_gif_cat](/figs-code/wigner-cat.gif){.fig}\n\n        >>> n = 16\n        >>> a = dq.destroy(n)\n        >>> H = dq.dag(a) @ dq.dag(a) @ a @ a  # Kerr Hamiltonian\n        >>> psi0 = dq.coherent(n, 2)\n        >>> tsave = np.linspace(0, np.pi, 1001)\n        >>> result = dq.sesolve(H, psi0, tsave)\n        >>> dq.plot_wigner_gif(\n        ...     result.states,\n        ...     gif_duration=10.0,  # 10 seconds GIF\n        ...     fps=25,\n        ...     xmax=4.0,\n        ...     clear=True,\n        ...     filename='docs/figs-code/wigner-kerr.gif',\n        ...     dpi=150,\n        ...     display=False,\n        ... )\n\n        ![plot_wigner_gif_kerr](/figs-code/wigner-kerr.gif){.fig-half}\n    \"\"\"\n    states = jnp.asarray(states)\n\n    ymax = xmax if ymax is None else ymax\n    nframes = int(gif_duration * fps)\n    selected_indexes = np.linspace(0, len(states), nframes, dtype=int)\n    _, _, wig = wigner(states[selected_indexes], xmax, ymax, npixels)\n\n    try:\n        # create temporary directory\n        tmpdir = pathlib.Path('./.tmp/dynamiqs')\n        tmpdir.mkdir(parents=True, exist_ok=True)\n\n        frames = []\n        for i in tqdm(range(nframes)):\n            fig, ax = figax(w=w, h=h)\n\n            plot_wigner_data(\n                wig[i],\n                ax=ax,\n                xmax=xmax,\n                ymax=ymax,\n                vmax=vmax,\n                cmap=cmap,\n                interpolation=interpolation,\n                colorbar=False,\n                cross=cross,\n                clear=clear,\n            )\n\n            frame_filename = tmpdir / f'tmp-{i}.png'\n            fig.savefig(frame_filename, bbox_inches='tight', dpi=dpi)\n            plt.close()\n            frame = iio.v3.imread(frame_filename)\n            frames.append(frame)\n\n        # loop=0: loop the GIF forever\n        duration = gif_duration * 1e3  # in ms\n        iio.v3.imwrite(filename, frames, format='GIF', duration=duration, loop=0)\n        if display:\n            ipy.display(ipy.Image(filename))\n    finally:\n        if tmpdir.exists():\n            shutil.rmtree(tmpdir, ignore_errors=True)\n"
+    },
+    {
+      "content": "The issue is caused by a deprecation warning in the `imageio` library (used as `iio` in the code) when calling `imwrite` with the `fps` keyword or similar parameters that have changed in recent versions.\n\nIn `dynamiqs/plots/plots_wigner.py`, the function `plot_wigner_gif` uses `imageio.v3.imwrite` to save the GIF.\n\nRelevant files and elements:\n- `dynamiqs/plots/plots_wigner.py::plot_wigner_gif`: This function calculates the number of frames using `fps` and `gif_duration`, then calls `iio.v3.imwrite(filename, frames, format='GIF', duration=duration, loop=0)`. The `duration` passed to `imwrite` is `gif_duration * 1e3` (milliseconds).\n\nThe deprecation warning likely arises because `imageio` expects duration per frame or a different way to specify frequency, or because the user is providing `fps` in a way that conflicts with how `duration` is being used in `v3.imwrite`. \n\nLooking at the code:\n```python\n    nframes = int(gif_duration * fps)\n    # ...\n    duration = gif_duration * 1e3  # in ms\n    iio.v3.imwrite(filename, frames, format='GIF', duration=duration, loop=0)\n```\n\nIn `imageio` v3, `duration` specifies the duration of each frame in milliseconds. If `duration` is set to the total `gif_duration * 1000`, then each frame will last for the entire duration of the GIF, which is not the intended behavior for a smooth animation. The intended duration per frame should be `(gif_duration * 1000) / nframes`.\n\nHowever, the issue description specifically mentions the `fps` keyword deprecation. In `imageio` v3, `fps` is often preferred or the way it is handled has changed.\n\nThe change most likely belongs in `dynamiqs/plots/plots_wigner.py` within the `plot_wigner_gif` function, specifically where `iio.v3.imwrite` is called, to use the correct parameter to control the frame rate/duration according to the updated `imageio` API.",
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "reasoning": null
+    }
+  ],
+  "action_history": []
+}

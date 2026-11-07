@@ -1,0 +1,227 @@
+{
+  "config_path": "graph/viewer/17",
+  "id": "e24325c8a7454bb5aa74dc9dc463428b",
+  "date_deployed": "2026-10-15T12:36:36.615076",
+  "parent": null,
+  "children": [],
+  "raw_chat": [
+    {
+      "role": "system",
+      "content": "You are a senior engineer doing reconnaissance before a change. Your job is to map the part of the codebase a task touches: where the behaviour lives, who calls it, and what would break if it changed. You read; you never edit.\n\n# Approach: breadth-first by directory\nFirst survey the layout: list the top-level folders and read overviews of the files whose names relate to the task. Narrow down one directory level at a time, and only read full elements once you know which module owns the behaviour.\n\n# Report contents\nList the files and elements (`path::Element.path`) that are relevant to the task, each with one line on why. Then explain where the change most likely belongs.\n\n# Output format\nUse your tools to explore. When you have finished, reply WITHOUT calling any tool. That\nfinal message is your report and is the only text passed on to later workers, so it must\nstand on its own: name files and elements as `path::Element.path`, and do not refer to\n\"above\" or to tool output the reader cannot see. Do not propose a full patch.\n\nThe directory structure is:\nCONTRIBUTING.md\nLICENSE\nMANIFEST.in\nREADME.md\ncodecov.yml\ndata/sample_stocks.csv\ndatabricks/__init__.py\ndatabricks/conftest.py\ndatabricks/koalas/__init__.py\ndatabricks/koalas/base.py\ndatabricks/koalas/datetimes.py\ndatabricks/koalas/exceptions.py\ndatabricks/koalas/frame.py\ndatabricks/koalas/generic.py\ndatabricks/koalas/groupby.py\ndatabricks/koalas/indexes.py\ndatabricks/koalas/indexing.py\ndatabricks/koalas/internal.py\ndatabricks/koalas/metadata.py\ndatabricks/koalas/missing/__init__.py\ndatabricks/koalas/missing/frame.py\ndatabricks/koalas/missing/groupby.py\ndatabricks/koalas/missing/indexes.py\ndatabricks/koalas/missing/series.py\ndatabricks/koalas/ml.py\ndatabricks/koalas/mlflow.py\ndatabricks/koalas/namespace.py\ndatabricks/koalas/plot.py\ndatabricks/koalas/series.py\ndatabricks/koalas/sql.py\ndatabricks/koalas/strings.py\ndatabricks/koalas/testing/__init__.py\ndatabricks/koalas/testing/utils.py\ndatabricks/koalas/tests/__init__.py\ndatabricks/koalas/tests/test_csv.py\ndatabricks/koalas/tests/test_dataframe.py\ndatabricks/koalas/tests/test_dataframe_conversion.py\ndatabricks/koalas/tests/test_dataframe_spark_io.py\ndatabricks/koalas/tests/test_etl.py\ndatabricks/koalas/tests/test_groupby.py\ndatabricks/koalas/tests/test_indexes.py\ndatabricks/koalas/tests/test_indexing.py\ndatabricks/koalas/tests/test_namespace.py\ndatabricks/koalas/tests/test_repr.py\ndatabricks/koalas/tests/test_reshape.py\ndatabricks/koalas/tests/test_series.py\ndatabricks/koalas/tests/test_series_conversion.py\ndatabricks/koalas/tests/test_series_datetime.py\ndatabricks/koalas/tests/test_series_plot.py\ndatabricks/koalas/tests/test_series_string.py\ndatabricks/koalas/tests/test_sql.py\ndatabricks/koalas/tests/test_stats.py\ndatabricks/koalas/tests/test_utils.py\ndatabricks/koalas/typedef.py\ndatabricks/koalas/utils.py\ndatabricks/koalas/version.py\ndev/_make_missing_functions.py\ndev/_make_missing_properties.py\ndev/download_travis_dependencies.sh\ndev/env_setup.sh\ndev/lint-python\ndev/pytest\ndev/tox.ini\ndocs/Makefile\ndocs/make.bat\ndocs/source/conf.py\ndocs/source/index.rst\ndocs/source/quickstart.rst\ndocs/source/reference/frame.rst\ndocs/source/reference/general_functions.rst\ndocs/source/reference/groupby.rst\ndocs/source/reference/index.rst\ndocs/source/reference/indexing.rst\ndocs/source/reference/io.rst\ndocs/source/reference/ml.rst\ndocs/source/reference/series.rst\ndocs/source/themes/nature_with_gtoc/layout.html\ndocs/source/themes/nature_with_gtoc/static/nature.css_t\ndocs/source/themes/nature_with_gtoc/theme.conf\nrequirements-dev.txt\nsetup.py"
+    },
+    {
+      "role": "user",
+      "content": "Investigate the repository for the task below. Do not change anything; report what you find.\n\n# Task\nResolve the following GitHub issue in this repository by editing the source code. Do not modify or add tests.\n\n<issue>\nindex changed after merge\n```python\r\nleft_kdf = ks.DataFrame({'A': [1, 2]}, index = ['zero', 'one'])\r\nleft_kdf\r\n         A\r\nzero   1\r\none    2\r\n\r\nright_kdf = ks.DataFrame({'B': ['x', 'y']}, index=['one', 'two'])\r\nright_kdf\r\n         B\r\none    x\r\ntwo    y\r\n\r\nleft_kdf.merge(right_kdf, left_index=True, right_index=True)\r\n       A     B\r\n0     2     x\r\n```\r\n\r\nIndex is changed. Expected answer is \r\n```python\r\nleft_kdf.merge(right_kdf, left_index=True, right_index=True)\r\n       A     B\r\none     2     x\r\n\r\n```\n</issue>"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-9f88ead584d75bbf",
+          "function": {
+            "arguments": "{\"folder_path\": \"databricks/koalas\"}",
+            "name": "list_folder"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-9f88ead584d75bbf",
+      "name": "list_folder",
+      "content": "# Folder databricks/koalas\n__init__.py\nbase.py\ndatetimes.py\nexceptions.py\nframe.py\ngeneric.py\ngroupby.py\nindexes.py\nindexing.py\ninternal.py\nmetadata.py\nmissing/\nml.py\nmlflow.py\nnamespace.py\nplot.py\nseries.py\nsql.py\nstrings.py\ntesting/\ntests/\ntypedef.py\nutils.py\nversion.py"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-94b10df8de131f47",
+          "function": {
+            "arguments": "{\"file_path\": \"databricks/koalas/frame.py\", \"line_end\": 100, \"line_start\": 1}",
+            "name": "view_lines"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-94b10df8de131f47",
+      "name": "view_lines",
+      "content": "--- databricks/koalas/frame.py (lines 1-100) ---\n#\n# Copyright (C) 2019 Databricks, Inc.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n\n\"\"\"\nA wrapper class for Spark DataFrame to behave similar to pandas DataFrame.\n\"\"\"\nimport re\nimport warnings\nfrom functools import partial, reduce\nfrom typing import Any, Optional, List, Tuple, Union\n\nimport numpy as np\nimport pandas as pd\nfrom pandas.api.types import is_list_like, is_dict_like\nfrom pandas.core.dtypes.inference import is_sequence\nfrom pyspark import sql as spark\nfrom pyspark.sql import functions as F, Column, DataFrame as SDataFrame\nfrom pyspark.sql.types import (BooleanType, ByteType, DecimalType, DoubleType, FloatType,\n                               IntegerType, LongType, NumericType, ShortType, StructType)\nfrom pyspark.sql.utils import AnalysisException\n\nfrom databricks import koalas as ks  # For running doctests and reference resolution in PyCharm.\nfrom databricks.koalas.utils import validate_arguments_and_invoke_function\nfrom databricks.koalas.generic import _Frame, max_display_count\nfrom databricks.koalas.internal import _InternalFrame\nfrom databricks.koalas.metadata import Metadata\nfrom databricks.koalas.missing.frame import _MissingPandasLikeDataFrame\nfrom databricks.koalas.ml import corr\nfrom databricks.koalas.typedef import infer_pd_series_spark_type\n\n\n# These regular expression patterns are complied and defined here to avoid to compile the same\n# pattern every time it is used in _repr_ and _repr_html_ in DataFrame.\n# Two patterns basically seek the footer string from Pandas'\nREPR_PATTERN = re.compile(r\"\\n\\n\\[(?P<rows>[0-9]+) rows x (?P<columns>[0-9]+) columns\\]$\")\nREPR_HTML_PATTERN = re.compile(\n    r\"\\n\\<p\\>(?P<rows>[0-9]+) rows × (?P<columns>[0-9]+) columns\\<\\/p\\>\\n\\<\\/div\\>$\")\n\n\n_flex_doc_FRAME = \"\"\"\nGet {desc} of dataframe and other, element-wise (binary operator `{op_name}`).\n\nEquivalent to ``{equiv}``. With reverse version, `{reverse}`.\n\nAmong flexible wrappers (`add`, `sub`, `mul`, `div`) to\narithmetic operators: `+`, `-`, `*`, `/`, `//`.\n\nParameters\n----------\nother : scalar\n    Any single data\n\nReturns\n-------\nDataFrame\n    Result of the arithmetic operation.\n\nExamples\n--------\n>>> df = ks.DataFrame({{'angles': [0, 3, 4],\n...                    'degrees': [360, 180, 360]}},\n...                   index=['circle', 'triangle', 'rectangle'],\n...                   columns=['angles', 'degrees'])\n>>> df\n           angles  degrees\ncircle          0      360\ntriangle        3      180\nrectangle       4      360\n\nAdd a scalar with operator version which return the same\nresults.\n\n>>> df + 1\n           angles  degrees\ncircle          1      361\ntriangle        4      181\nrectangle       5      361\n\n>>> df.add(1)\n           angles  degrees\ncircle          1      361\ntriangle        4      181\nrectangle       5      361\n\nDivide by constant with reverse version.\n\n>>> df.div(10)\n"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-8133666c310604b1",
+          "function": {
+            "arguments": "{\"regex\": \"def merge(\", \"path_regex\": \"databricks/koalas/frame.py\", \"extensions\": \"py\"}",
+            "name": "search"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-8133666c310604b1",
+      "name": "search",
+      "content": "Error executing tool search: Invalid regex pattern: missing ), unterminated subpattern at position 9"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-bd98e8cb21ce74cf",
+          "function": {
+            "arguments": "{\"extensions\": \"py\", \"path_regex\": \"databricks/koalas/frame.py\", \"regex\": \"merge\\\\(\"}",
+            "name": "search"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-bd98e8cb21ce74cf",
+      "name": "search",
+      "content": "# Showing ranked results 1-1 of 1\n## File databricks/koalas/frame.py:\n### 1. Element `DataFrame.merge`, lines 2824-3023 (6 matches)\n\"\"\"\nMerge DataFrame objects with a database-style join.\nParameters\n----------\nright: Object to merge with.\nhow: Type of merge to be performed.\n{‘left’, ‘right’, ‘outer’, ‘inner’}, default ‘inner’\nleft: use only keys from left frame, similar to a SQL left outer join; preserve key\norder.\nright: use only keys from right frame, similar to a SQL right outer join; preserve key\norder.\nouter: use union of keys from both frames, similar to a SQL full outer join; sort keys\nlexicographically.\ninner: use intersection of keys from both frames, similar to a SQL inner join;\npreserve the order of the left keys.\non: Column or index level names to join on. These must be found in both DataFrames. If on\nis None and not merging on indexes then this defaults to the intersection of the\ncolumns in both DataFrames.\nleft_on: Column or index level names to join on in the left DataFrame. Can also\nbe an array or list of arrays of the length of the left DataFrame.\nThese arrays are treated as if they are columns.\nright_on: Column or index level names to join on in the right DataFrame. Can also\nbe an array or list of arrays of the length of the right DataFrame.\nThese arrays are treated as if they are columns.\nleft_index: Use the index from the left DataFrame as the join key(s). If it is a\nMultiIndex, the number of keys in the other DataFrame (either the index or a number of\ncolumns) must match the number of levels.\nright_index: Use the index from the right DataFrame as the join key. Same caveats as\nleft_index.\nsuffixes: Suffix to apply to overlapping column names in the left and right side,\nrespectively.\nReturns\n-------\nDataFrame\nA DataFrame of the two merged objects.\nExamples"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-850dce7085611fdc",
+          "function": {
+            "arguments": "{\"file_path\": \"databricks/koalas/frame.py\", \"line_end\": 3023, \"line_start\": 2824}",
+            "name": "view_lines"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-850dce7085611fdc",
+      "name": "view_lines",
+      "content": "--- databricks/koalas/frame.py (lines 2824-3023) ---\n    def merge(left, right: 'DataFrame', how: str = 'inner',\n              on: Optional[Union[str, List[str]]] = None,\n              left_on: Optional[Union[str, List[str]]] = None,\n              right_on: Optional[Union[str, List[str]]] = None,\n              left_index: bool = False, right_index: bool = False,\n              suffixes: Tuple[str, str] = ('_x', '_y')) -> 'DataFrame':\n        \"\"\"\n        Merge DataFrame objects with a database-style join.\n\n        Parameters\n        ----------\n        right: Object to merge with.\n        how: Type of merge to be performed.\n            {‘left’, ‘right’, ‘outer’, ‘inner’}, default ‘inner’\n\n            left: use only keys from left frame, similar to a SQL left outer join; preserve key\n                order.\n            right: use only keys from right frame, similar to a SQL right outer join; preserve key\n                order.\n            outer: use union of keys from both frames, similar to a SQL full outer join; sort keys\n                lexicographically.\n            inner: use intersection of keys from both frames, similar to a SQL inner join;\n                preserve the order of the left keys.\n        on: Column or index level names to join on. These must be found in both DataFrames. If on\n            is None and not merging on indexes then this defaults to the intersection of the\n            columns in both DataFrames.\n        left_on: Column or index level names to join on in the left DataFrame. Can also\n            be an array or list of arrays of the length of the left DataFrame.\n            These arrays are treated as if they are columns.\n        right_on: Column or index level names to join on in the right DataFrame. Can also\n            be an array or list of arrays of the length of the right DataFrame.\n            These arrays are treated as if they are columns.\n        left_index: Use the index from the left DataFrame as the join key(s). If it is a\n            MultiIndex, the number of keys in the other DataFrame (either the index or a number of\n            columns) must match the number of levels.\n        right_index: Use the index from the right DataFrame as the join key. Same caveats as\n            left_index.\n        suffixes: Suffix to apply to overlapping column names in the left and right side,\n            respectively.\n\n        Returns\n        -------\n        DataFrame\n            A DataFrame of the two merged objects.\n\n        Examples\n        --------\n        >>> df1 = ks.DataFrame({'lkey': ['foo', 'bar', 'baz', 'foo'],\n        ...                     'value': [1, 2, 3, 5]},\n        ...                    columns=['lkey', 'value'])\n        >>> df2 = ks.DataFrame({'rkey': ['foo', 'bar', 'baz', 'foo'],\n        ...                     'value': [5, 6, 7, 8]},\n        ...                    columns=['rkey', 'value'])\n        >>> df1\n          lkey  value\n        0  foo      1\n        1  bar      2\n        2  baz      3\n        3  foo      5\n        >>> df2\n          rkey  value\n        0  foo      5\n        1  bar      6\n        2  baz      7\n        3  foo      8\n\n        Merge df1 and df2 on the lkey and rkey columns. The value columns have\n        the default suffixes, _x and _y, appended.\n\n        >>> merged = df1.merge(df2, left_on='lkey', right_on='rkey')\n        >>> merged.sort_values(by=['lkey', 'value_x', 'rkey', 'value_y'])\n          lkey  value_x rkey  value_y\n        0  bar        2  bar        6\n        1  baz        3  baz        7\n        2  foo        1  foo        5\n        3  foo        1  foo        8\n        4  foo        5  foo        5\n        5  foo        5  foo        8\n\n        >>> left_kdf = ks.DataFrame({'A': [1, 2]})\n        >>> right_kdf = ks.DataFrame({'B': ['x', 'y']}, index=[1, 2])\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True)\n           A  B\n        0  2  x\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True, how='left')\n           A     B\n        0  1  None\n        1  2     x\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True, how='right')\n             A  B\n        0  2.0  x\n        1  NaN  y\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True, how='outer')\n             A     B\n        0  1.0  None\n        1  2.0     x\n        2  NaN     y\n\n        Notes\n        -----\n        As described in #263, joining string columns currently returns None for missing values\n            instead of NaN.\n        \"\"\"\n        _to_list = lambda o: o if o is None or is_list_like(o) else [o]\n\n        if on:\n            if left_on or right_on:\n                raise ValueError('Can only pass argument \"on\" OR \"left_on\" and \"right_on\", '\n                                 'not a combination of both.')\n            left_keys = _to_list(on)\n            right_keys = _to_list(on)\n        else:\n            # TODO: need special handling for multi-index.\n            if left_index:\n                left_keys = left._metadata.index_columns\n            else:\n                left_keys = _to_list(left_on)\n            if right_index:\n                right_keys = right._metadata.index_columns\n            else:\n                right_keys = _to_list(right_on)\n\n            if left_keys and not right_keys:\n                raise ValueError('Must pass right_on or right_index=True')\n            if right_keys and not left_keys:\n                raise ValueError('Must pass left_on or left_index=True')\n            if not left_keys and not right_keys:\n                common = list(left.columns.intersection(right.columns))\n                if len(common) == 0:\n                    raise ValueError(\n                        'No common columns to perform merge on. Merge options: '\n                        'left_on=None, right_on=None, left_index=False, right_index=False')\n                left_keys = common\n                right_keys = common\n            if len(left_keys) != len(right_keys):  # type: ignore\n                raise ValueError('len(left_keys) must equal len(right_keys)')\n\n        if how == 'full':\n            warnings.warn(\"Warning: While Koalas will accept 'full', you should use 'outer' \" +\n                          \"instead to be compatible with the pandas merge API\", UserWarning)\n        if how == 'outer':\n            # 'outer' in pandas equals 'full' in Spark\n            how = 'full'\n        if how not in ('inner', 'left', 'right', 'full'):\n            raise ValueError(\"The 'how' parameter has to be amongst the following values: \",\n                             \"['inner', 'left', 'right', 'outer']\")\n\n        left_table = left._sdf.alias('left_table')\n        right_table = right._sdf.alias('right_table')\n\n        left_key_columns = [left_table[col] for col in left_keys]  # type: ignore\n        right_key_columns = [right_table[col] for col in right_keys]  # type: ignore\n\n        join_condition = reduce(lambda x, y: x & y,\n                                [lkey == rkey for lkey, rkey\n                                 in zip(left_key_columns, right_key_columns)])\n\n        joined_table = left_table.join(right_table, join_condition, how=how)\n\n        # Unpack suffixes tuple for convenience\n        left_suffix = suffixes[0]\n        right_suffix = suffixes[1]\n\n        # Append suffixes to columns with the same name to avoid conflicts later\n        duplicate_columns = (set(left._metadata.data_columns)\n                             & set(right._metadata.data_columns))\n\n        left_index_columns = set(left._metadata.index_columns)\n        right_index_columns = set(right._metadata.index_columns)\n\n        # TODO: in some case, we can keep indexes.\n        exprs = []\n        for col in left_table.columns:\n            if col in left_index_columns:\n                continue\n            scol = left_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    pass\n                else:\n                    col = col + left_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n        for col in right_table.columns:\n            if col in right_index_columns:\n                continue\n            scol = right_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    continue\n                else:\n                    col = col + right_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n\n        return DataFrame(joined_table.select(*exprs))\n"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-ab79d06f50599b00",
+          "function": {
+            "arguments": "{\"file_path\": \"databricks/koalas/frame.py\", \"line_end\": 3023, \"line_start\": 3000}",
+            "name": "view_lines"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-ab79d06f50599b00",
+      "name": "view_lines",
+      "content": "--- databricks/koalas/frame.py (lines 3000-3023) ---\n        for col in left_table.columns:\n            if col in left_index_columns:\n                continue\n            scol = left_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    pass\n                else:\n                    col = col + left_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n        for col in right_table.columns:\n            if col in right_index_columns:\n                continue\n            scol = right_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    continue\n                else:\n                    col = col + right_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n\n        return DataFrame(joined_table.select(*exprs))\n"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-a76cadab6a2c8530",
+          "function": {
+            "arguments": "{\"file_path\": \"databricks/koalas/frame.py\", \"line_end\": 3023, \"line_start\": 2950}",
+            "name": "view_lines"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-a76cadab6a2c8530",
+      "name": "view_lines",
+      "content": "--- databricks/koalas/frame.py (lines 2950-3023) ---\n            if left_keys and not right_keys:\n                raise ValueError('Must pass right_on or right_index=True')\n            if right_keys and not left_keys:\n                raise ValueError('Must pass left_on or left_index=True')\n            if not left_keys and not right_keys:\n                common = list(left.columns.intersection(right.columns))\n                if len(common) == 0:\n                    raise ValueError(\n                        'No common columns to perform merge on. Merge options: '\n                        'left_on=None, right_on=None, left_index=False, right_index=False')\n                left_keys = common\n                right_keys = common\n            if len(left_keys) != len(right_keys):  # type: ignore\n                raise ValueError('len(left_keys) must equal len(right_keys)')\n\n        if how == 'full':\n            warnings.warn(\"Warning: While Koalas will accept 'full', you should use 'outer' \" +\n                          \"instead to be compatible with the pandas merge API\", UserWarning)\n        if how == 'outer':\n            # 'outer' in pandas equals 'full' in Spark\n            how = 'full'\n        if how not in ('inner', 'left', 'right', 'full'):\n            raise ValueError(\"The 'how' parameter has to be amongst the following values: \",\n                             \"['inner', 'left', 'right', 'outer']\")\n\n        left_table = left._sdf.alias('left_table')\n        right_table = right._sdf.alias('right_table')\n\n        left_key_columns = [left_table[col] for col in left_keys]  # type: ignore\n        right_key_columns = [right_table[col] for col in right_keys]  # type: ignore\n\n        join_condition = reduce(lambda x, y: x & y,\n                                [lkey == rkey for lkey, rkey\n                                 in zip(left_key_columns, right_key_columns)])\n\n        joined_table = left_table.join(right_table, join_condition, how=how)\n\n        # Unpack suffixes tuple for convenience\n        left_suffix = suffixes[0]\n        right_suffix = suffixes[1]\n\n        # Append suffixes to columns with the same name to avoid conflicts later\n        duplicate_columns = (set(left._metadata.data_columns)\n                             & set(right._metadata.data_columns))\n\n        left_index_columns = set(left._metadata.index_columns)\n        right_index_columns = set(right._metadata.index_columns)\n\n        # TODO: in some case, we can keep indexes.\n        exprs = []\n        for col in left_table.columns:\n            if col in left_index_columns:\n                continue\n            scol = left_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    pass\n                else:\n                    col = col + left_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n        for col in right_table.columns:\n            if col in right_index_columns:\n                continue\n            scol = right_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    continue\n                else:\n                    col = col + right_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n\n        return DataFrame(joined_table.select(*exprs))\n"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-892660da3b3a80e5",
+          "function": {
+            "arguments": "{\"file_path\": \"databricks/koalas/frame.py\", \"line_end\": 3023, \"line_start\": 2824}",
+            "name": "view_lines"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-892660da3b3a80e5",
+      "name": "view_lines",
+      "content": "--- databricks/koalas/frame.py (lines 2824-3023) ---\n    def merge(left, right: 'DataFrame', how: str = 'inner',\n              on: Optional[Union[str, List[str]]] = None,\n              left_on: Optional[Union[str, List[str]]] = None,\n              right_on: Optional[Union[str, List[str]]] = None,\n              left_index: bool = False, right_index: bool = False,\n              suffixes: Tuple[str, str] = ('_x', '_y')) -> 'DataFrame':\n        \"\"\"\n        Merge DataFrame objects with a database-style join.\n\n        Parameters\n        ----------\n        right: Object to merge with.\n        how: Type of merge to be performed.\n            {‘left’, ‘right’, ‘outer’, ‘inner’}, default ‘inner’\n\n            left: use only keys from left frame, similar to a SQL left outer join; preserve key\n                order.\n            right: use only keys from right frame, similar to a SQL right outer join; preserve key\n                order.\n            outer: use union of keys from both frames, similar to a SQL full outer join; sort keys\n                lexicographically.\n            inner: use intersection of keys from both frames, similar to a SQL inner join;\n                preserve the order of the left keys.\n        on: Column or index level names to join on. These must be found in both DataFrames. If on\n            is None and not merging on indexes then this defaults to the intersection of the\n            columns in both DataFrames.\n        left_on: Column or index level names to join on in the left DataFrame. Can also\n            be an array or list of arrays of the length of the left DataFrame.\n            These arrays are treated as if they are columns.\n        right_on: Column or index level names to join on in the right DataFrame. Can also\n            be an array or list of arrays of the length of the right DataFrame.\n            These arrays are treated as if they are columns.\n        left_index: Use the index from the left DataFrame as the join key(s). If it is a\n            MultiIndex, the number of keys in the other DataFrame (either the index or a number of\n            columns) must match the number of levels.\n        right_index: Use the index from the right DataFrame as the join key. Same caveats as\n            left_index.\n        suffixes: Suffix to apply to overlapping column names in the left and right side,\n            respectively.\n\n        Returns\n        -------\n        DataFrame\n            A DataFrame of the two merged objects.\n\n        Examples\n        --------\n        >>> df1 = ks.DataFrame({'lkey': ['foo', 'bar', 'baz', 'foo'],\n        ...                     'value': [1, 2, 3, 5]},\n        ...                    columns=['lkey', 'value'])\n        >>> df2 = ks.DataFrame({'rkey': ['foo', 'bar', 'baz', 'foo'],\n        ...                     'value': [5, 6, 7, 8]},\n        ...                    columns=['rkey', 'value'])\n        >>> df1\n          lkey  value\n        0  foo      1\n        1  bar      2\n        2  baz      3\n        3  foo      5\n        >>> df2\n          rkey  value\n        0  foo      5\n        1  bar      6\n        2  baz      7\n        3  foo      8\n\n        Merge df1 and df2 on the lkey and rkey columns. The value columns have\n        the default suffixes, _x and _y, appended.\n\n        >>> merged = df1.merge(df2, left_on='lkey', right_on='rkey')\n        >>> merged.sort_values(by=['lkey', 'value_x', 'rkey', 'value_y'])\n          lkey  value_x rkey  value_y\n        0  bar        2  bar        6\n        1  baz        3  baz        7\n        2  foo        1  foo        5\n        3  foo        1  foo        8\n        4  foo        5  foo        5\n        5  foo        5  foo        8\n\n        >>> left_kdf = ks.DataFrame({'A': [1, 2]})\n        >>> right_kdf = ks.DataFrame({'B': ['x', 'y']}, index=[1, 2])\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True)\n           A  B\n        0  2  x\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True, how='left')\n           A     B\n        0  1  None\n        1  2     x\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True, how='right')\n             A  B\n        0  2.0  x\n        1  NaN  y\n\n        >>> left_kdf.merge(right_kdf, left_index=True, right_index=True, how='outer')\n             A     B\n        0  1.0  None\n        1  2.0     x\n        2  NaN     y\n\n        Notes\n        -----\n        As described in #263, joining string columns currently returns None for missing values\n            instead of NaN.\n        \"\"\"\n        _to_list = lambda o: o if o is None or is_list_like(o) else [o]\n\n        if on:\n            if left_on or right_on:\n                raise ValueError('Can only pass argument \"on\" OR \"left_on\" and \"right_on\", '\n                                 'not a combination of both.')\n            left_keys = _to_list(on)\n            right_keys = _to_list(on)\n        else:\n            # TODO: need special handling for multi-index.\n            if left_index:\n                left_keys = left._metadata.index_columns\n            else:\n                left_keys = _to_list(left_on)\n            if right_index:\n                right_keys = right._metadata.index_columns\n            else:\n                right_keys = _to_list(right_on)\n\n            if left_keys and not right_keys:\n                raise ValueError('Must pass right_on or right_index=True')\n            if right_keys and not left_keys:\n                raise ValueError('Must pass left_on or left_index=True')\n            if not left_keys and not right_keys:\n                common = list(left.columns.intersection(right.columns))\n                if len(common) == 0:\n                    raise ValueError(\n                        'No common columns to perform merge on. Merge options: '\n                        'left_on=None, right_on=None, left_index=False, right_index=False')\n                left_keys = common\n                right_keys = common\n            if len(left_keys) != len(right_keys):  # type: ignore\n                raise ValueError('len(left_keys) must equal len(right_keys)')\n\n        if how == 'full':\n            warnings.warn(\"Warning: While Koalas will accept 'full', you should use 'outer' \" +\n                          \"instead to be compatible with the pandas merge API\", UserWarning)\n        if how == 'outer':\n            # 'outer' in pandas equals 'full' in Spark\n            how = 'full'\n        if how not in ('inner', 'left', 'right', 'full'):\n            raise ValueError(\"The 'how' parameter has to be amongst the following values: \",\n                             \"['inner', 'left', 'right', 'outer']\")\n\n        left_table = left._sdf.alias('left_table')\n        right_table = right._sdf.alias('right_table')\n\n        left_key_columns = [left_table[col] for col in left_keys]  # type: ignore\n        right_key_columns = [right_table[col] for col in right_keys]  # type: ignore\n\n        join_condition = reduce(lambda x, y: x & y,\n                                [lkey == rkey for lkey, rkey\n                                 in zip(left_key_columns, right_key_columns)])\n\n        joined_table = left_table.join(right_table, join_condition, how=how)\n\n        # Unpack suffixes tuple for convenience\n        left_suffix = suffixes[0]\n        right_suffix = suffixes[1]\n\n        # Append suffixes to columns with the same name to avoid conflicts later\n        duplicate_columns = (set(left._metadata.data_columns)\n                             & set(right._metadata.data_columns))\n\n        left_index_columns = set(left._metadata.index_columns)\n        right_index_columns = set(right._metadata.index_columns)\n\n        # TODO: in some case, we can keep indexes.\n        exprs = []\n        for col in left_table.columns:\n            if col in left_index_columns:\n                continue\n            scol = left_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    pass\n                else:\n                    col = col + left_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n        for col in right_table.columns:\n            if col in right_index_columns:\n                continue\n            scol = right_table[col]\n            if col in duplicate_columns:\n                if col in left_keys and col in right_keys:\n                    continue\n                else:\n                    col = col + right_suffix\n                    scol = scol.alias(col)\n            exprs.append(scol)\n\n        return DataFrame(joined_table.select(*exprs))\n"
+    },
+    {
+      "content": "The issue describes a behavior in `DataFrame.merge` where, when merging on indexes (`left_index=True, right_index=True`), the resulting DataFrame's index is reset to a default integer range (e.g., `0, 1`) instead of preserving the left DataFrame's index.\n\nThe relevant code is in `databricks/koalas/frame.py` within the `merge` method.\n\n### Relevant Files and Elements\n\n- `databricks/koalas/frame.py::DataFrame.merge`: This method implements the merge logic. It performs a Spark join and then constructs a new `DataFrame` from the selected columns of the joined Spark DataFrame.\n- `databricks/koalas/frame.py::DataFrame`: The main class being worked on.\n- `databricks/koalas/metadata.py`: Likely contains metadata handling, including how indexes are stored and retrieved.\n\n### Analysis\n\nIn `databricks/koalas/frame.py::DataFrame.merge`, the method currently constructs the result as follows:\n```python\n        # ... (selection of columns)\n        return DataFrame(joined_table.select(*exprs))\n```\nThe `DataFrame` constructor is called with a Spark DataFrame (`joined_table.select(*exprs)`). In Koalas, creating a `DataFrame` from a Spark DataFrame typically results in a new index being generated if one isn't explicitly provided or handled.\n\nThe implementation of `merge` explicitly skips index columns when building the `exprs` list:\n```python\n        left_index_columns = set(left._metadata.index_columns)\n        # ...\n        for col in left_table.columns:\n            if col in left_index_columns:\n                continue\n            # ...\n```\nBecause the index columns are excluded from the `select` statement, the resulting Spark DataFrame only contains the data columns. When this is wrapped back into a `DataFrame`, it lacks the original index information, causing the index to revert to the default integer range.\n\nTo fix this, the `merge` method needs to ensure that if `left_index` is `True`, the resulting `DataFrame` preserves the index from the `left` DataFrame (or at least the relevant index columns). The `TODO: in some case, we can keep indexes.` comment in `databricks/koalas/frame.py` indicates that this behavior was known and intentionally (or partially) omitted.\n\nThe change most likely belongs in `databricks/koalas/frame.py::DataFrame.merge`, specifically in how the resulting `DataFrame` is instantiated to ensure the index is correctly restored from the `left` DataFrame when appropriate.",
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "reasoning": null
+    }
+  ],
+  "action_history": []
+}

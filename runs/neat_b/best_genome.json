@@ -1,0 +1,391 @@
+{
+  "id": "6abeeeb6b3394303833210137107a066",
+  "generation": 30,
+  "parents": [
+    "b42c7f3af74042929351b67f69e7485a"
+  ],
+  "operators": [
+    "mutate_properties"
+  ],
+  "fitness": 0.43982365673542145,
+  "adjusted_fitness": 0.37982365673542146,
+  "species_id": 15,
+  "created_at": "2026-10-16T10:32:42.512108+00:00",
+  "evaluated_at": "2026-10-16T10:44:54.442753+00:00",
+  "eval_duration_s": 731.929129,
+  "task_scores": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.3627450980392157,
+    0.5952380952380952,
+    0.5606060606060606,
+    0.0
+  ],
+  "fitness_history": [
+    0.43982365673542145
+  ],
+  "nodes": [
+    {
+      "innovation": 47,
+      "type": "editor",
+      "properties": {
+        "context_budget": 1,
+        "instruction": 0,
+        "max_steps": 1,
+        "report_focus": 1,
+        "role": 3,
+        "strategy": 1,
+        "tool_set": 1
+      }
+    },
+    {
+      "innovation": 97,
+      "type": "editor",
+      "properties": {
+        "context_budget": 0,
+        "instruction": 3,
+        "max_steps": 2,
+        "report_focus": 3,
+        "role": 3,
+        "strategy": 1,
+        "tool_set": 0
+      }
+    },
+    {
+      "innovation": 100,
+      "type": "judgemerger",
+      "properties": {
+        "context_budget": 2,
+        "instruction": 1,
+        "role": 1,
+        "strategy": 3,
+        "view_full_weight": 1
+      }
+    },
+    {
+      "innovation": 122,
+      "type": "editor",
+      "properties": {
+        "context_budget": 3,
+        "instruction": 1,
+        "max_steps": 0,
+        "report_focus": 1,
+        "role": 1,
+        "strategy": 2,
+        "tool_set": 3
+      }
+    },
+    {
+      "innovation": 207,
+      "type": "judgemerger",
+      "properties": {
+        "context_budget": 3,
+        "instruction": 2,
+        "role": 2,
+        "strategy": 3,
+        "view_full_weight": 1
+      }
+    },
+    {
+      "innovation": 271,
+      "type": "viewer",
+      "properties": {
+        "role": 3,
+        "strategy": 3,
+        "report_focus": 2,
+        "instruction": 2,
+        "max_steps": 2,
+        "tool_set": 3
+      }
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 76,
+      "src": 47,
+      "dst": "END",
+      "kind": "edit",
+      "enabled": false
+    },
+    {
+      "innovation": 98,
+      "src": 47,
+      "dst": 97,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 99,
+      "src": 47,
+      "dst": 97,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 101,
+      "src": 47,
+      "dst": 100,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 102,
+      "src": 97,
+      "dst": 100,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 103,
+      "src": 100,
+      "dst": "END",
+      "kind": "edit",
+      "enabled": false
+    },
+    {
+      "innovation": 104,
+      "src": 47,
+      "dst": 100,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 105,
+      "src": 97,
+      "dst": 100,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 106,
+      "src": 47,
+      "dst": 100,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 115,
+      "src": 97,
+      "dst": 100,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 124,
+      "src": 97,
+      "dst": 122,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 208,
+      "src": 100,
+      "dst": 207,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 209,
+      "src": 122,
+      "dst": 207,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 210,
+      "src": 207,
+      "dst": "END",
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 211,
+      "src": 100,
+      "dst": 207,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 212,
+      "src": 122,
+      "dst": 207,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 213,
+      "src": 122,
+      "dst": 207,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 272,
+      "src": 271,
+      "dst": 207,
+      "kind": "view",
+      "enabled": true
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": 47,
+        "type": "editor",
+        "properties": {
+          "context_budget": 1,
+          "instruction": 0,
+          "max_steps": 1,
+          "report_focus": 1,
+          "role": 3,
+          "strategy": 1,
+          "tool_set": 1
+        }
+      },
+      {
+        "id": 97,
+        "type": "editor",
+        "properties": {
+          "context_budget": 0,
+          "instruction": 3,
+          "max_steps": 2,
+          "report_focus": 3,
+          "role": 3,
+          "strategy": 1,
+          "tool_set": 0
+        }
+      },
+      {
+        "id": 100,
+        "type": "judgemerger",
+        "properties": {
+          "context_budget": 2,
+          "instruction": 1,
+          "role": 1,
+          "strategy": 3,
+          "view_full_weight": 1
+        }
+      },
+      {
+        "id": 122,
+        "type": "editor",
+        "properties": {
+          "context_budget": 3,
+          "instruction": 1,
+          "max_steps": 0,
+          "report_focus": 1,
+          "role": 1,
+          "strategy": 2,
+          "tool_set": 3
+        }
+      },
+      {
+        "id": 207,
+        "type": "judgemerger",
+        "properties": {
+          "context_budget": 3,
+          "instruction": 2,
+          "role": 2,
+          "strategy": 3,
+          "view_full_weight": 1
+        }
+      },
+      {
+        "id": 271,
+        "type": "viewer",
+        "properties": {
+          "role": 3,
+          "strategy": 3,
+          "report_focus": 2,
+          "instruction": 2,
+          "max_steps": 2,
+          "tool_set": 3
+        }
+      }
+    ],
+    "edges": [
+      {
+        "src": 47,
+        "dst": 97,
+        "kind": "view"
+      },
+      {
+        "src": 47,
+        "dst": 97,
+        "kind": "report"
+      },
+      {
+        "src": 47,
+        "dst": 100,
+        "kind": "edit"
+      },
+      {
+        "src": 97,
+        "dst": 100,
+        "kind": "edit"
+      },
+      {
+        "src": 47,
+        "dst": 100,
+        "kind": "view"
+      },
+      {
+        "src": 97,
+        "dst": 100,
+        "kind": "view"
+      },
+      {
+        "src": 47,
+        "dst": 100,
+        "kind": "report"
+      },
+      {
+        "src": 97,
+        "dst": 100,
+        "kind": "report"
+      },
+      {
+        "src": 97,
+        "dst": 122,
+        "kind": "report"
+      },
+      {
+        "src": 100,
+        "dst": 207,
+        "kind": "edit"
+      },
+      {
+        "src": 122,
+        "dst": 207,
+        "kind": "edit"
+      },
+      {
+        "src": 207,
+        "dst": "END",
+        "kind": "edit"
+      },
+      {
+        "src": 100,
+        "dst": 207,
+        "kind": "view"
+      },
+      {
+        "src": 122,
+        "dst": 207,
+        "kind": "view"
+      },
+      {
+        "src": 122,
+        "dst": 207,
+        "kind": "report"
+      },
+      {
+        "src": 271,
+        "dst": 207,
+        "kind": "view"
+      }
+    ]
+  }
+}

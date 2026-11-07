@@ -1,0 +1,11 @@
+{
+ "n": 16,
+ "resolved": 16,
+ "resolve_rate": 1.0,
+ "status": {
+  "resolved": 16
+ },
+ "mean_duration_s": 32.3,
+ "missing_images": [],
+ "not_resolved_ids": []
+}

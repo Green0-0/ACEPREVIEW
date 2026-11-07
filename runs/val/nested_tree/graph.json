@@ -1,0 +1,198 @@
+{
+ "nodes": [
+  {
+   "id": 1,
+   "type": "editor",
+   "properties": {
+    "context_budget": 0,
+    "instruction": 0,
+    "max_steps": 1,
+    "report_focus": 1,
+    "role": 2,
+    "strategy": 0,
+    "tool_set": 0
+   }
+  },
+  {
+   "id": 2,
+   "type": "editor",
+   "properties": {
+    "context_budget": 1,
+    "instruction": 1,
+    "max_steps": 0,
+    "report_focus": 0,
+    "role": 3,
+    "strategy": 2,
+    "tool_set": 3
+   }
+  },
+  {
+   "id": 3,
+   "type": "editor",
+   "properties": {
+    "context_budget": 0,
+    "instruction": 0,
+    "max_steps": 1,
+    "report_focus": 1,
+    "role": 2,
+    "strategy": 0,
+    "tool_set": 0
+   }
+  },
+  {
+   "id": 4,
+   "type": "editor",
+   "properties": {
+    "context_budget": 1,
+    "instruction": 1,
+    "max_steps": 0,
+    "report_focus": 0,
+    "role": 3,
+    "strategy": 2,
+    "tool_set": 3
+   }
+  },
+  {
+   "id": 5,
+   "type": "pickmerger",
+   "properties": {
+    "ace_format": 3,
+    "context_budget": 3,
+    "instruction": 2,
+    "role": 2,
+    "strategy": 3,
+    "view_full_weight": 1
+   }
+  },
+  {
+   "id": 6,
+   "type": "pickmerger",
+   "properties": {
+    "ace_format": 3,
+    "context_budget": 3,
+    "instruction": 2,
+    "role": 2,
+    "strategy": 3,
+    "view_full_weight": 1
+   }
+  },
+  {
+   "id": 7,
+   "type": "judgemerger",
+   "properties": {
+    "context_budget": 0,
+    "instruction": 3,
+    "role": 3,
+    "strategy": 2,
+    "view_full_weight": 0
+   }
+  }
+ ],
+ "edges": [
+  {
+   "src": 1,
+   "dst": 2,
+   "kind": "view"
+  },
+  {
+   "src": 1,
+   "dst": 2,
+   "kind": "report"
+  },
+  {
+   "src": 2,
+   "dst": 3,
+   "kind": "view"
+  },
+  {
+   "src": 2,
+   "dst": 3,
+   "kind": "report"
+  },
+  {
+   "src": 3,
+   "dst": 4,
+   "kind": "view"
+  },
+  {
+   "src": 3,
+   "dst": 4,
+   "kind": "report"
+  },
+  {
+   "src": 1,
+   "dst": 5,
+   "kind": "edit"
+  },
+  {
+   "src": 1,
+   "dst": 5,
+   "kind": "view"
+  },
+  {
+   "src": 1,
+   "dst": 5,
+   "kind": "report"
+  },
+  {
+   "src": 2,
+   "dst": 5,
+   "kind": "edit"
+  },
+  {
+   "src": 2,
+   "dst": 5,
+   "kind": "report"
+  },
+  {
+   "src": 3,
+   "dst": 6,
+   "kind": "edit"
+  },
+  {
+   "src": 3,
+   "dst": 6,
+   "kind": "view"
+  },
+  {
+   "src": 3,
+   "dst": 6,
+   "kind": "report"
+  },
+  {
+   "src": 4,
+   "dst": 6,
+   "kind": "edit"
+  },
+  {
+   "src": 4,
+   "dst": 6,
+   "kind": "report"
+  },
+  {
+   "src": 5,
+   "dst": 7,
+   "kind": "edit"
+  },
+  {
+   "src": 6,
+   "dst": 7,
+   "kind": "edit"
+  },
+  {
+   "src": 1,
+   "dst": 7,
+   "kind": "view"
+  },
+  {
+   "src": 3,
+   "dst": 7,
+   "kind": "view"
+  },
+  {
+   "src": 7,
+   "dst": "END",
+   "kind": "edit"
+  }
+ ]
+}

@@ -1,0 +1,256 @@
+{
+  "config_path": "graph/viewer/17",
+  "id": "f5365ba2432444858f220d10e1cc51c0",
+  "date_deployed": "2026-10-15T14:05:43.201337",
+  "parent": null,
+  "children": [],
+  "raw_chat": [
+    {
+      "role": "system",
+      "content": "You are a senior engineer doing reconnaissance before a change. Your job is to map the part of the codebase a task touches: where the behaviour lives, who calls it, and what would break if it changed. You read; you never edit.\n\n# Approach: breadth-first by directory\nFirst survey the layout: list the top-level folders and read overviews of the files whose names relate to the task. Narrow down one directory level at a time, and only read full elements once you know which module owns the behaviour.\n\n# Report contents\nList the files and elements (`path::Element.path`) that are relevant to the task, each with one line on why. Then explain where the change most likely belongs.\n\n# Output format\nUse your tools to explore. When you have finished, reply WITHOUT calling any tool. That\nfinal message is your report and is the only text passed on to later workers, so it must\nstand on its own: name files and elements as `path::Element.path`, and do not refer to\n\"above\" or to tool output the reader cannot see. Do not propose a full patch.\n\nThe directory structure is:\nCONTRIBUTING.rst\nLICENSE\nMakefile\nREADME.md\nartwork/PNG/ (2 files; use list_folder to see them)\nartwork/SVG/ (4 files; use list_folder to see them)\nartwork/favicon.ico\nartwork/logo-dark.png\nartwork/logo-light.png\nartwork/tagline-dark.svg\nartwork/tagline-light.svg\ndocs/_static/ (3 files; use list_folder to see them)\ndocs/benchmarks.rst\ndocs/conf.py\ndocs/contribution-guide.rst\ndocs/examples/ (221 files; use list_folder to see them)\ndocs/images/ (10 files; use list_folder to see them)\ndocs/index.rst\ndocs/migration/ (3 files; use list_folder to see them)\ndocs/reference/ (68 files; use list_folder to see them)\ndocs/release-notes/ (3 files; use list_folder to see them)\ndocs/usage/ (34 files; use list_folder to see them)\nmypy.ini\npoetry.lock\npyproject.toml\nsonar-project.properties\nstarlite/__init__.py\nstarlite/__main__.py\nstarlite/_asgi/ (8 files; use list_folder to see them)\nstarlite/_kwargs/ (6 files; use list_folder to see them)\nstarlite/_layers/ (2 files; use list_folder to see them)\nstarlite/_multipart.py\nstarlite/_openapi/ (14 files; use list_folder to see them)\nstarlite/_parsers.py\nstarlite/_signature/ (4 files; use list_folder to see them)\nstarlite/app.py\nstarlite/background_tasks.py\nstarlite/cli/ (7 files; use list_folder to see them)\nstarlite/config/ (7 files; use list_folder to see them)\nstarlite/connection/ (4 files; use list_folder to see them)\nstarlite/constants.py\nstarlite/contrib/ (34 files; use list_folder to see them)\nstarlite/controller.py\nstarlite/data_extractors.py\nstarlite/datastructures/ (8 files; use list_folder to see them)\nstarlite/di.py\nstarlite/dto.py\nstarlite/enums.py\nstarlite/events/ (3 files; use list_folder to see them)\nstarlite/exceptions/ (4 files; use list_folder to see them)\nstarlite/file_system.py\nstarlite/handlers/ (8 files; use list_folder to see them)\nstarlite/logging/ (5 files; use list_folder to see them)\nstarlite/middleware/ (21 files; use list_folder to see them)\nstarlite/openapi/ (37 files; use list_folder to see them)\nstarlite/pagination.py\nstarlite/params.py\nstarlite/partial.py\nstarlite/plugins.py\nstarlite/py.typed\nstarlite/response/ (6 files; use list_folder to see them)\nstarlite/response_containers.py\nstarlite/router.py\nstarlite/routes/ (5 files; use list_folder to see them)\nstarlite/security/ (5 files; use list_folder to see them)\nstarlite/serialization.py\nstarlite/static_files/ (3 files; use list_folder to see them)\nstarlite/status_codes.py\nstarlite/stores/ (6 files; use list_folder to see them)\nstarlite/template/ (3 files; use list_folder to see them)\nstarlite/testing/ (10 files; use list_folder to see them)\nstarlite/types/ (10 files; use list_folder to see them)\nstarlite/utils/ (13 files; use list_folder to see them)\ntest_apps/logging_test_app/ (2 files; use list_folder to see them)\ntest_apps/openapi_test_app/ (2 files; use list_folder to see them)\ntest_apps/piccolo_admin_app/ (7 files; use list_folder to see them)\ntest_apps/static_files_test_app/ (3 files; use list_folder to see them)\ntests/__init__.py\ntests/app/ (7 files; use list_folder to see them)\ntests/asgi_router/ (2 files; use list_folder to see them)\ntests/cli/ (7 files; use list_folder to see them)\ntests/compatibility/ (2 files; use list_folder to see them)\ntests/conftest.py\ntests/connection/ (6 files; use list_folder to see them)\ntests/contrib/ (38 files; use list_folder to see them)\ntests/datastructures/ (8 files; use list_folder to see them)\ntests/dependency_injection/ (8 files; use list_folder to see them)\ntests/dto_factory/ (7 files; use list_folder to see them)\ntests/events/ (2 files; use list_folder to see them)\ntests/handlers/ (23 files; use list_folder to see them)\ntests/kwargs/ (16 files; use list_folder to see them)\ntests/life_cycle_hooks/ (4 files; use list_folder to see them)\ntests/logging_config/ (3 files; use list_folder to see them)\ntests/middleware/ (17 files; use list_folder to see them)\ntests/openapi/ (17 files; use list_folder to see them)\ntests/piccolo_conf.py\ntests/response/ (11 files; use list_folder to see them)\ntests/routing/ (7 files; use list_folder to see them)\ntests/security/ (3 files; use list_folder to see them)\ntests/signature/ (3 files; use list_folder to see them)\ntests/static_files/ (4 files; use list_folder to see them)\ntests/template/ (7 files; use list_folder to see them)\ntests/test_controller.py\ntests/test_data_extractors.py\ntests/test_dependency.py\ntests/test_exception_handlers.py\ntests/test_exceptions.py\ntests/test_file_system.py\ntests/test_guards.py\ntests/test_option_requests.py\ntests/test_pagination.py\ntests/test_parsers.py\ntests/test_plugins.py\ntests/test_provide.py\ntests/test_response_caching.py\ntests/test_response_containers.py\ntests/test_router_registration.py\ntests/test_serialization.py\ntests/test_stores.py\ntests/test_typing.py\ntests/test_utils.py\ntests/testing/ (4 files; use list_folder to see them)\ntests/utils/ (11 files; use list_folder to see them)\ntools/__init__.py\ntools/build_docs.py\ntools/sphinx_ext/ (4 files; use list_folder to see them)"
+    },
+    {
+      "role": "user",
+      "content": "Investigate the repository for the task below. Do not change anything; report what you find.\n\n# Task\nResolve the following GitHub issue in this repository by editing the source code. Do not modify or add tests.\n\n<issue>\nBug: Openapi schema generation using stringized return annotation\n### Description\n\nIf a handler has a string return annotation, either through ` -> \"Model\":` or `from __future__ import annotations` the responses generated for openapi do not make an attempt to de-stringize them leading to a no-content response being generated.\r\n\r\n![image](https://user-images.githubusercontent.com/20659309/228678971-2f61688c-2191-48eb-ae7f-f5721fae9fd1.png)\r\n\n\n### URL to code causing the issue\n\n_No response_\n\n### MCVE\n\n```python\n\"\"\"Minimal Starlite application.\"\"\"\r\nfrom __future__ import annotations\r\n\r\nfrom starlite import Starlite, get\r\n\r\n\r\n@get(\"/\")\r\ndef hello_world() -> dict[str, str]:\r\n    \"\"\"Route Handler that outputs hello world.\"\"\"\r\n    return {\"hello\": \"world\"}\r\n\r\n\r\napp = Starlite(route_handlers=[hello_world], debug=True)\n```\n\n\n### Steps to reproduce\n\n```bash\n1. Go to '...'\r\n2. Click on '....'\r\n3. Scroll down to '....'\r\n4. See error\n```\n\n\n### Screenshots\n\n```bash\n\"![SCREENSHOT_DESCRIPTION](SCREENSHOT_LINK.png)\"\n```\n\n\n### Logs\n\n_No response_\n\n### Starlite Version\n\nmain\n\n### Platform\n\n- [ ] Linux\n- [ ] Mac\n- [ ] Windows\n- [ ] Other (Please specify in the description above)\n</issue>"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-854d7183b891aaab",
+          "function": {
+            "arguments": "{\"regex\": \"openapi|schema|OpenAPI\"}",
+            "name": "search"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-854d7183b891aaab",
+      "name": "search",
+      "content": "# Showing ranked results 1-10 of 428\n## File starlite/openapi/spec/schema.py:\n### 1. Element `Schema`, lines 42-656 (126 matches)\n\n## File starlite/_openapi/schema_generation/schema.py:\n### 2. Element `<file>`, lines 1-764 (117 matches)\n36 from starlite._openapi.schema_generation.constrained_fields import (\n\n## File docs/usage/openapi.rst:\n### 3. Element `<file>`, lines 1-367 (79 matches)\n1 OpenAPI integration\n\n## File starlite/_openapi/schema_generation/schema.py:\n### 4. Element `create_schema_for_builtin_generics`, lines 436-513 (36 matches)\n\"\"\"Handle builtin generic types.\n\n## File starlite/_openapi/responses.py:\n### 5. Element `create_success_response`, lines 63-178 (31 matches)\n\"\"\"Create the schema for a success response.\"\"\"\n\n## File tests/contrib/tortoise_orm/test_tortoise_orm_plugin_openapi_specs.py:\n### 6. Element `test_tortoise_orm_plugin_openapi_spec_generation`, lines 13-88 (31 matches)\ntest_tortoise_orm_plugin_openapi_spec_generation (identifier)\n\n## File tests/openapi/test_parameters.py:\n### 7. Element `test_create_parameters`, lines 43-131 (30 matches)\n51 assert is_schema_value(service_id.schema)\n\n## File starlite/_openapi/schema_generation/schema.py:\n### 8. Element `create_schema`, lines 691-764 (28 matches)\n\"\"\"Create a Schema for a given SignatureField.\n\n## File tests/contrib/piccolo_orm/test_piccolo_orm_plugin_openapi_specs.py:\n### 9. Element `test_piccolo_orm_plugin_openapi_spec_generation`, lines 13-83 (27 matches)\ntest_piccolo_orm_plugin_openapi_spec_generation (identifier)\n\n## File tests/openapi/test_responses.py:\n### 10. Element `test_create_error_responses`, lines 68-130 (27 matches)\n87 pet_exc_response_schema = pet_exc_response[1].content[MediaType.JSON].schema"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-b077a7ea0492e11c",
+          "function": {
+            "arguments": "{\"folder_path\": \"starlite/_openapi\"}",
+            "name": "list_folder"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-b077a7ea0492e11c",
+      "name": "list_folder",
+      "content": "# Folder starlite/_openapi\n__init__.py\nparameters.py\npath_item.py\nrequest_body.py\nresponses.py\nschema_generation/\ntypescript_converter/\nutils.py"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-ad8232725c9467ba",
+          "function": {
+            "arguments": "{\"folder_path\": \"starlite/_openapi/schema_generation\"}",
+            "name": "list_folder"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-ad8232725c9467ba",
+      "name": "list_folder",
+      "content": "# Folder starlite/_openapi/schema_generation\n__init__.py\nconstrained_fields.py\nexamples.py\nschema.py"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-971f606f8dca24d5",
+          "function": {
+            "arguments": "{\"paths\": \"starlite/app.py,starlite/router.py,starlite/routes/\"}",
+            "name": "view"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-971f606f8dca24d5",
+      "name": "view",
+      "content": "--- starlite/app.py ---\nfrom __future__ import annotations\n\nfrom datetime import date, datetime, time, timedelta\nfrom functools import partial\nfrom itertools import chain\nfrom pathlib import Path\nfrom typing import TYPE_CHECKING, Any, Mapping, Sequence, cast\n\nfrom typing_extensions import Self, TypedDict\n\nfrom starlite._asgi import ASGIRouter\nfrom starlite._asgi.utils import get_route_handlers, wrap_in_exception_handler\nfrom starlite._openapi.path_item import create_path_item\nfrom starlite._signature import create_signature_model\nfrom starlite.config.allowed_hosts import AllowedHostsConfig\nfrom starlite.config.app import AppConfig\nfrom starlite.config.response_cache import ResponseCacheConfig\nfrom starlite.connection import Request, WebSocket\nfrom starlite.constants import OPENAPI_NOT_INITIALIZED\nfrom starlite.datastructures.state import State\nfrom starlite.events.emitter import BaseEventEmitterBackend, SimpleEventEmitter\nfrom starlite.exceptions import (\n    ImproperlyConfiguredException,\n    NoRouteMatchFoundException,\n)\nfrom starlite.handlers.http_handlers import HTTPRouteHandler\nfrom starlite.logging.config import LoggingConfig, get_logger_placeholder\nfrom starlite.middleware.cors import CORSMiddleware\nfrom starlite.openapi.config import OpenAPIConfig\nfrom starlite.openapi.spec.components import Components\nfrom starlite.plugins import (\n    InitPluginProtocol,\n    OpenAPISchemaPluginProtocol,\n    SerializationPluginProtocol,\n)\nfrom starlite.router import Router\nfrom starlite.routes import ASGIRoute, HTTPRoute, WebSocketRoute\nfrom starlite.static_files.base import StaticFiles\nfrom starlite.stores.registry import StoreRegistry\nfrom starlite.types import Empty\nfrom starlite.types.internal_types import PathParameterDefinition\nfrom starlite.utils import (\n    as_async_callable_list,\n    async_partial,\n    is_async_callable,\n    join_paths,\n    unique,\n)\nfrom starlite.utils.dataclass import extract_dataclass_items\n\n\n... (file truncated, 775 more lines. Use full=True to view entire file)\n\n--- starlite/router.py ---\nfrom __future__ import annotations\n\nfrom collections import defaultdict\nfrom copy import copy\nfrom typing import TYPE_CHECKING, Any, DefaultDict, Mapping, Sequence, cast\n\nfrom starlite._layers.utils import narrow_response_cookies, narrow_response_headers\nfrom starlite.controller import Controller\nfrom starlite.exceptions import ImproperlyConfiguredException\nfrom starlite.handlers.asgi_handlers import ASGIRouteHandler\nfrom starlite.handlers.base import BaseRouteHandler\nfrom starlite.handlers.http_handlers import HTTPRouteHandler\nfrom starlite.handlers.websocket_handlers import WebsocketRouteHandler\nfrom starlite.routes import ASGIRoute, HTTPRoute, WebSocketRoute\nfrom starlite.utils import find_index, is_class_and_subclass, join_paths, normalize_path, unique\nfrom starlite.utils.sync import AsyncCallable\n\n__all__ = (\"Router\",)\n\n\nif TYPE_CHECKING:\n    from starlite.datastructures import CacheControlHeader, ETag\n    from starlite.di import Provide\n    from starlite.openapi.spec import SecurityRequirement\n    from starlite.routes import BaseRoute\n    from starlite.types import (\n        AfterRequestHookHandler,\n        AfterResponseHookHandler,\n        BeforeRequestHookHandler,\n        ControllerRouterHandler,\n        ExceptionHandlersMap,\n        Guard,\n        Middleware,\n        ParametersMap,\n        ResponseCookies,\n        ResponseType,\n        RouteHandlerMapItem,\n        RouteHandlerType,\n        TypeEncodersMap,\n    )\n    from starlite.types.composite_types import ResponseHeaders\n\n\nclass Router:\n    \"\"\"The Starlite Router class.\n\n    A Router instance is used to group controller, routers and route handler functions under a shared path fragment\n    \"\"\"\n\n    __slots__ = (\n\n... (file truncated, 248 more lines. Use full=True to view entire file)\n\nError: File starlite/routes/ not found."
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-8db308b3b83317b0",
+          "function": {
+            "arguments": "{\"folder_path\": \"starlite/routes\"}",
+            "name": "list_folder"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-8db308b3b83317b0",
+      "name": "list_folder",
+      "content": "# Folder starlite/routes\n__init__.py\nasgi.py\nbase.py\nhttp.py\nwebsocket.py"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-b8a1e5d79be74b8a",
+          "function": {
+            "arguments": "{\"paths\": \"starlite/_signature/signature.py,starlite/_signature/fields.py\"}",
+            "name": "view"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-b8a1e5d79be74b8a",
+      "name": "view",
+      "content": "Error: File starlite/_signature/signature.py not found.\n\nError: File starlite/_signature/fields.py not found."
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-b26b7f22327241d8",
+          "function": {
+            "arguments": "{\"folder_path\": \"starlite/_signature\"}",
+            "name": "list_folder"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-b26b7f22327241d8",
+      "name": "list_folder",
+      "content": "# Folder starlite/_signature\n__init__.py\nmodels.py\nparsing.py\nutils.py"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-a02644864c0615c0",
+          "function": {
+            "arguments": "{\"paths\": \"starlite/_signature/parsing.py,starlite/_signature/models.py,starlite/_signature/utils.py\"}",
+            "name": "view"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-a02644864c0615c0",
+      "name": "view",
+      "content": "--- starlite/_signature/parsing.py ---\nfrom __future__ import annotations\n\nfrom dataclasses import asdict, dataclass\nfrom inspect import Parameter, Signature\nfrom typing import TYPE_CHECKING, Any, List, cast\n\nfrom pydantic import create_model\nfrom pydantic.fields import FieldInfo, Undefined\nfrom pydantic_factories import ModelFactory\nfrom typing_extensions import get_args\n\nfrom starlite._signature.models import PydanticSignatureModel, SignatureModel\nfrom starlite._signature.utils import get_fn_type_hints\nfrom starlite.constants import SKIP_VALIDATION_NAMES, UNDEFINED_SENTINELS\nfrom starlite.datastructures import ImmutableState\nfrom starlite.exceptions import ImproperlyConfiguredException\nfrom starlite.params import BodyKwarg, DependencyKwarg, ParameterKwarg\nfrom starlite.plugins import (\n    PluginMapping,\n    SerializationPluginProtocol,\n    get_plugin_for_value,\n)\nfrom starlite.types import Empty\nfrom starlite.utils import is_optional_union\nfrom starlite.utils.helpers import unwrap_partial\n\n__all__ = (\n    \"ParsedSignatureParameter\",\n    \"create_pydantic_signature_model\",\n    \"create_signature_model\",\n    \"get_type_annotation_from_plugin\",\n    \"parse_fn_signature\",\n)\n\n\nif TYPE_CHECKING:\n    from starlite.types import AnyCallable\n\n\n@dataclass\nclass ParsedSignatureParameter:\n    \"\"\"Represents the parameters of a callable for purpose of signature model generation.\"\"\"\n\n    annotation: Any\n    default: Any\n    name: str\n    optional: bool\n\n    @classmethod\n    def from_parameter(\n\n... (file truncated, 243 more lines. Use full=True to view entire file)\n\n--- starlite/_signature/models.py ---\nfrom __future__ import annotations\n\nfrom abc import ABC, abstractmethod\nfrom dataclasses import dataclass\nfrom typing import TYPE_CHECKING, Any, ClassVar, Literal\n\nfrom pydantic import BaseConfig, BaseModel, ValidationError\nfrom typing_extensions import get_args, get_origin\n\nfrom starlite.connection import ASGIConnection, Request\nfrom starlite.constants import UNDEFINED_SENTINELS\nfrom starlite.enums import ScopeType\nfrom starlite.exceptions import InternalServerException, ValidationException\nfrom starlite.params import BodyKwarg, DependencyKwarg, ParameterKwarg\nfrom starlite.types import Empty\nfrom starlite.utils import is_any, is_optional_union, is_union, make_non_optional_union\nfrom starlite.utils.predicates import is_generic, is_mapping, is_non_string_iterable, is_non_string_sequence\n\n__all__ = (\"PydanticSignatureModel\", \"SignatureField\", \"SignatureModel\")\n\nif TYPE_CHECKING:\n    from pydantic.fields import ModelField\n\n    from starlite.plugins import PluginMapping\n\n\n@dataclass(unsafe_hash=True, frozen=True)\nclass SignatureField:\n    \"\"\"Abstraction representing a model field. This class is meant to replace equivalent datastructures from, other\n    libraries, for example, pydantic or msgspec.\n    \"\"\"\n\n    __slots__ = (\n        \"children\",\n        \"default_value\",\n        \"extra\",\n        \"field_type\",\n        \"kwarg_model\",\n        \"name\",\n    )\n\n    children: tuple[SignatureField, ...] | None\n    \"\"\"A mapping of subtypes, if any.\"\"\"\n    default_value: Any\n    \"\"\"Field name.\"\"\"\n    extra: dict[str, Any]\n    \"\"\"A mapping of extra values.\"\"\"\n    field_type: Any\n    \"\"\"The type of the kwarg.\"\"\"\n    kwarg_model: ParameterKwarg | BodyKwarg | DependencyKwarg | None\n\n... (file truncated, 288 more lines. Use full=True to view entire file)\n\n--- starlite/_signature/utils.py ---\nfrom __future__ import annotations\n\nimport sys\nimport typing\nfrom inspect import isclass, ismethod\nfrom typing import TYPE_CHECKING, Any, cast\n\nfrom typing_extensions import get_type_hints\n\nfrom starlite.connection import Request, WebSocket\nfrom starlite.datastructures import Headers, ImmutableState, State\nfrom starlite.exceptions import ImproperlyConfiguredException\nfrom starlite.types import Receive, Scope, Send, WebSocketScope\n\n__all__ = (\"get_fn_type_hints\", \"get_signature_model\")\n\n\nif TYPE_CHECKING:\n    from starlite._signature.models import SignatureModel\n\n\n_GLOBAL_NAMES = {\n    \"Headers\": Headers,\n    \"ImmutableState\": ImmutableState,\n    \"Receive\": Receive,\n    \"Request\": Request,\n    \"Scope\": Scope,\n    \"Send\": Send,\n    \"State\": State,\n    \"WebSocket\": WebSocket,\n    \"WebSocketScope\": WebSocketScope,\n}\n\"\"\"A mapping of names used for handler signature forward-ref resolution.\n\nThis allows users to include these names within an `if TYPE_CHECKING:` block in their handler module.\n\"\"\"\n\n\ndef get_signature_model(value: Any) -> type[SignatureModel]:\n    \"\"\"Retrieve and validate the signature model from a provider or handler.\"\"\"\n    try:\n        return cast(\"type[SignatureModel]\", value.signature_model)\n    except AttributeError as e:  # pragma: no cover\n        raise ImproperlyConfiguredException(f\"The 'signature_model' attribute for {value} is not set\") from e\n\n\ndef get_fn_type_hints(fn: Any, namespace: dict[str, Any] | None = None) -> dict[str, Any]:\n    \"\"\"Resolve type hints for ``fn``.\n\n    Args:\n\n... (file truncated, 29 more lines. Use full=True to view entire file)"
+    },
+    {
+      "content": null,
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "tool_calls": [
+        {
+          "id": "chatcmpl-tool-9a937a7d468ab3c0",
+          "function": {
+            "arguments": "{\"file_path\": \"starlite/_signature/parsing.py\", \"line\": 100, \"full\": true}",
+            "name": "view_at"
+          },
+          "type": "function"
+        }
+      ],
+      "reasoning": null
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "chatcmpl-tool-9a937a7d468ab3c0",
+      "name": "view_at",
+      "content": "--- starlite/_signature/parsing.py::ParsedSignatureParameter.should_skip_validation.93 ---\n@property\n    def should_skip_validation(self) -> bool:\n        \"\"\"Whether the parameter should skip validation.\n\n        Returns:\n            A boolean indicating whether the parameter should be validated.\n        \"\"\"\n        return self.name in SKIP_VALIDATION_NAMES or (\n            isinstance(self.default, DependencyKwarg) and self.default.skip_validation\n        )"
+    },
+    {
+      "role": "user",
+      "content": "You have reached the step limit. Do not call any more tools. Reply now with your final answer: a short summary of what you found and what you changed."
+    },
+    {
+      "content": "The issue is caused by the OpenAPI schema generation failing to resolve type annotations that are represented as strings (either due to `from __future__ import annotations` or explicit string forward references). When the return type is a string, the OpenAPI generator fails to identify the return type, resulting in a default \"no-content\" response schema.\n\n### Findings\n\n*   **`starlite/_signature/parsing.py`**: This module is responsible for parsing function signatures and converting them into `SignatureModel` objects. The `parse_fn_signature` function (and its helpers) uses `typing.get_type_hints` to resolve annotations.\n*   **`starlite/_openapi/responses.py`**: This module handles the creation of OpenAPI response schemas. It likely relies on the `SignatureModel` generated by the signature parsing logic.\n*   **`starlite/_openapi/schema_generation/schema.py`**: This contains the core logic for converting types into OpenAPI schema objects. It is where the failure to \"de-stringize\" or resolve the type eventually manifests as an incorrect schema.\n*   **`starlite/_signature/utils.py`**: Contains `get_fn_type_hints`, which wraps `typing.get_type_hints`.\n\nThe root cause lies in how the return type of the handler is extracted and resolved during the signature parsing phase. If `get_type_hints` is called without a proper namespace or if the stringified type is not correctly resolved against the module's global scope, the resulting type hint remains a string rather than the actual type object.\n\n### Proposed Changes\n\nThe fix most likely belongs in **`starlite/_signature/parsing.py`**. Specifically, the logic that calls `get_type_hints` needs to ensure that the `globalns` and `localns` are correctly provided to allow `typing.get_type_hints` to resolve stringified forward references into actual type objects. \n\nIf the return annotation is a string, `get_type_hints` will only resolve it if the type is available in the provided namespace. The signature parsing logic must ensure it passes the function's module namespace to `get_type_hints` to facilitate this resolution.",
+      "refusal": null,
+      "role": "assistant",
+      "annotations": null,
+      "audio": null,
+      "function_call": null,
+      "reasoning": null
+    }
+  ],
+  "action_history": []
+}

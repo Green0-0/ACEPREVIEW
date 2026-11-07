@@ -16,6 +16,7 @@ configs/                NEAT hyperparameter files
 slurm/                  Slurm job files for vLLM servers, drivers, image pulls and evaluation
 tests/                  pytest suite (fake LLM clients, no network)
 results/                reports, figures, the evolved graphs and the run log (results/README.md)
+runs/                   the two NEAT run histories, the selected candidates and their validation runs
 agent2/                 the agent runtime ACE is built on
 ```
 
@@ -90,8 +91,8 @@ uv run --group analysis python scripts/graph_analysis.py --runs runs/neat_a runs
 uv run python scripts/run_webui.py --runs-root runs --port 8766
 ```
 
-Opens a browser view of every NEAT run directory under `--runs-root`: generations, species, lineages, per-task scores and rollouts. Live runs are picked up while they are written.
+Opens a browser view of every NEAT run directory under `--runs-root`: generations, species, lineages, per-task scores and rollouts. Live runs are picked up while they are written. The command above works from a clone: `runs/neat_a` and `runs/neat_b` are the two evolution runs from the report with their complete histories (`genomes.jsonl`, `generations.jsonl`, `species.jsonl`, `evaluations.jsonl`, `events.jsonl`, `innovations.json`, `population_state.json`, `best_genome.json`). Worker rollouts are kept only for the four genomes that went to validation (`runs/selection/`), including the winner `neat_b_0_37b607a6`, so the trajectory viewer opens for those and reports "not found" for the rest. `runs/val/` holds the validation predictions of each candidate, the naive baseline and the hand-written graph.
 
 ## Data not in the repository
 
-Per-instance predictions, rollouts, evaluation logs, sandbox images, repository snapshots and NEAT histories are too large for git and stay on the cluster under `/usr/project/xtmp/kg349/ace/`. Everything derived from them that the report uses is under `results/`.
+The SWE-bench Verified predictions and evaluation logs, the remaining worker rollouts, sandbox images and repository snapshots are too large for git and stay on the cluster under `/usr/project/xtmp/kg349/ace/`. Everything derived from them that the report uses is under `results/`.

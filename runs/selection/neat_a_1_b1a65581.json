@@ -1,0 +1,310 @@
+{
+  "id": "b1a65581ccbe4455a1dec90bcc751ede",
+  "generation": 3,
+  "parents": [
+    "381abad6636d4b239110bf358bc7dd84",
+    "2401ddfacf7349edb2e63b5f3ff0114d"
+  ],
+  "operators": [
+    "crossover",
+    "mutate_properties",
+    "add_worker"
+  ],
+  "fitness": 0.35714285714285715,
+  "adjusted_fitness": 0.30714285714285716,
+  "species_id": 4,
+  "created_at": "2026-10-15T16:36:25.010467+00:00",
+  "evaluated_at": "2026-10-15T17:36:54.132867+00:00",
+  "eval_duration_s": 3629.121036,
+  "task_scores": [
+    0.5,
+    1.0,
+    0.0,
+    0.6428571428571428,
+    0.0,
+    0.0
+  ],
+  "fitness_history": [],
+  "nodes": [
+    {
+      "innovation": 0,
+      "type": "editor",
+      "properties": {
+        "context_budget": 1,
+        "instruction": 3,
+        "max_steps": 1,
+        "report_focus": 0,
+        "role": 0,
+        "strategy": 1,
+        "tool_set": 1
+      }
+    },
+    {
+      "innovation": 17,
+      "type": "viewer",
+      "properties": {
+        "instruction": 0,
+        "max_steps": 1,
+        "report_focus": 0,
+        "role": 1,
+        "strategy": 1,
+        "tool_set": 2
+      }
+    },
+    {
+      "innovation": 49,
+      "type": "editor",
+      "properties": {
+        "context_budget": 3,
+        "instruction": 0,
+        "max_steps": 0,
+        "report_focus": 0,
+        "role": 0,
+        "strategy": 2,
+        "tool_set": 0
+      }
+    },
+    {
+      "innovation": 52,
+      "type": "pickmerger",
+      "properties": {
+        "ace_format": 2,
+        "context_budget": 3,
+        "instruction": 0,
+        "role": 3,
+        "strategy": 3,
+        "view_full_weight": 2
+      }
+    },
+    {
+      "innovation": 111,
+      "type": "listviewer",
+      "properties": {
+        "role": 1,
+        "strategy": 1,
+        "report_focus": 1,
+        "instruction": 1,
+        "context_budget": 1,
+        "list_budget": 0,
+        "view_full_weight": 0
+      }
+    }
+  ],
+  "connections": [
+    {
+      "innovation": 1,
+      "src": 0,
+      "dst": "END",
+      "kind": "edit",
+      "enabled": false
+    },
+    {
+      "innovation": 18,
+      "src": 17,
+      "dst": 0,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 50,
+      "src": 0,
+      "dst": 49,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 51,
+      "src": 0,
+      "dst": 49,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 53,
+      "src": 0,
+      "dst": 52,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 54,
+      "src": 49,
+      "dst": 52,
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 55,
+      "src": 52,
+      "dst": "END",
+      "kind": "edit",
+      "enabled": true
+    },
+    {
+      "innovation": 56,
+      "src": 0,
+      "dst": 52,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 57,
+      "src": 49,
+      "dst": 52,
+      "kind": "view",
+      "enabled": false
+    },
+    {
+      "innovation": 58,
+      "src": 0,
+      "dst": 52,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 59,
+      "src": 49,
+      "dst": 52,
+      "kind": "report",
+      "enabled": true
+    },
+    {
+      "innovation": 112,
+      "src": 49,
+      "dst": 111,
+      "kind": "view",
+      "enabled": true
+    },
+    {
+      "innovation": 113,
+      "src": 111,
+      "dst": 52,
+      "kind": "view",
+      "enabled": true
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": 0,
+        "type": "editor",
+        "properties": {
+          "context_budget": 1,
+          "instruction": 3,
+          "max_steps": 1,
+          "report_focus": 0,
+          "role": 0,
+          "strategy": 1,
+          "tool_set": 1
+        }
+      },
+      {
+        "id": 17,
+        "type": "viewer",
+        "properties": {
+          "instruction": 0,
+          "max_steps": 1,
+          "report_focus": 0,
+          "role": 1,
+          "strategy": 1,
+          "tool_set": 2
+        }
+      },
+      {
+        "id": 49,
+        "type": "editor",
+        "properties": {
+          "context_budget": 3,
+          "instruction": 0,
+          "max_steps": 0,
+          "report_focus": 0,
+          "role": 0,
+          "strategy": 2,
+          "tool_set": 0
+        }
+      },
+      {
+        "id": 52,
+        "type": "pickmerger",
+        "properties": {
+          "ace_format": 2,
+          "context_budget": 3,
+          "instruction": 0,
+          "role": 3,
+          "strategy": 3,
+          "view_full_weight": 2
+        }
+      },
+      {
+        "id": 111,
+        "type": "listviewer",
+        "properties": {
+          "role": 1,
+          "strategy": 1,
+          "report_focus": 1,
+          "instruction": 1,
+          "context_budget": 1,
+          "list_budget": 0,
+          "view_full_weight": 0
+        }
+      }
+    ],
+    "edges": [
+      {
+        "src": 17,
+        "dst": 0,
+        "kind": "view"
+      },
+      {
+        "src": 0,
+        "dst": 49,
+        "kind": "view"
+      },
+      {
+        "src": 0,
+        "dst": 49,
+        "kind": "report"
+      },
+      {
+        "src": 0,
+        "dst": 52,
+        "kind": "edit"
+      },
+      {
+        "src": 49,
+        "dst": 52,
+        "kind": "edit"
+      },
+      {
+        "src": 52,
+        "dst": "END",
+        "kind": "edit"
+      },
+      {
+        "src": 0,
+        "dst": 52,
+        "kind": "view"
+      },
+      {
+        "src": 0,
+        "dst": 52,
+        "kind": "report"
+      },
+      {
+        "src": 49,
+        "dst": 52,
+        "kind": "report"
+      },
+      {
+        "src": 49,
+        "dst": 111,
+        "kind": "view"
+      },
+      {
+        "src": 111,
+        "dst": 52,
+        "kind": "view"
+      }
+    ]
+  }
+}

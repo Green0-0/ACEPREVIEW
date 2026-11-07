@@ -21,7 +21,17 @@ env/
 # Run artifacts: rollouts, NEAT history, population state, evaluation scratch
 .agent2/
 .ace/
-rollouts/
+/rollouts/
+# runs/ keeps the NEAT histories, the selected candidates and the validation
+# results so the web UI works from a clone; worker rollouts stay out except for
+# the four selected genomes.
+runs/*/rollouts/*
+!runs/neat_a/rollouts/54ce48818e664cc2b337741133d811b5/
+!runs/neat_a/rollouts/b1a65581ccbe4455a1dec90bcc751ede/
+!runs/neat_b/rollouts/37b607a653f2437fbc1c696c4c502d3b/
+!runs/neat_b/rollouts/abe0784018d84109b723343c70cc794e/
+runs/val/logs/
+runs/val/*/rollouts/
 
 # IDE / OS
 .idea/
